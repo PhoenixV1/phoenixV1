@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +22,37 @@
             border-radius: 32px;
             box-shadow: 0 0 50px rgba(255, 60, 0, 0.1);
         }
+        .engine-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+        .engine-btn.active {
+            background: #ff3c00;
+            color: #000;
+            border-color: #ff3c00;
+        }
+        .toggle-track {
+            width: 48px;
+            height: 24px;
+            border-radius: 99px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-thumb {
+            width: 18px;
+            height: 18px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+        }
+        .toggle-active .toggle-thumb {
+            transform: translateX(24px);
+        }
     </style>
 </head>
 <body>
@@ -36,17 +66,17 @@
             <section>
                 <h3 class="text-[10px] uppercase tracking-[0.4em] text-red-900 font-black mb-4">Proxy Engine</h3>
                 <div class="grid grid-cols-2 gap-4">
-                    <button class="bg-red-600 text-black font-black py-3 rounded-xl text-xs uppercase">Ultraviolet</button>
-                    <button class="bg-white/5 border border-white/10 text-white/40 font-black py-3 rounded-xl text-xs uppercase hover:bg-white/10">Scramjet</button>
+                    <button id="engine-uv" onclick="setEngine('uv')" class="engine-btn active font-black py-3 rounded-xl text-xs uppercase">Ultraviolet</button>
+                    <button id="engine-sj" onclick="setEngine('sj')" class="engine-btn font-black py-3 rounded-xl text-xs uppercase">Scramjet</button>
                 </div>
             </section>
 
             <section>
                 <h3 class="text-[10px] uppercase tracking-[0.4em] text-red-900 font-black mb-4">Transport Protocol</h3>
-                <select class="w-full bg-black border border-white/5 p-4 rounded-xl text-sm font-bold text-white/80 outline-none focus:border-red-600 transition-colors">
-                    <option>Wisp (Default)</option>
-                    <option>Libcurl</option>
-                    <option>Ephemeral</option>
+                <select id="transport-select" onchange="saveSettings()" class="w-full bg-black border border-white/5 p-4 rounded-xl text-sm font-bold text-white/80 outline-none focus:border-red-600 transition-colors">
+                    <option value="wisp">Wisp (Default)</option>
+                    <option value="libcurl">Libcurl</option>
+                    <option value="ephemeral">Ephemeral</option>
                 </select>
                 <p class="text-[9px] text-gray-700 mt-2 uppercase tracking-widest">Select Wisp for best performance on school networks.</p>
             </section>
@@ -54,13 +84,18 @@
             <section class="space-y-4">
                 <div class="flex justify-between items-center p-4 bg-white/[0.02] rounded-2xl border border-white/5">
                     <span class="text-sm font-bold opacity-60">Automatic Cloaking</span>
-                    <div class="w-12 h-6 bg-red-600 rounded-full flex items-center justify-end px-1">
-                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    <div id="cloak-toggle" onclick="toggleCloak()" class="toggle-track bg-red-600 toggle-active">
+                        <div class="toggle-thumb"></div>
                     </div>
                 </div>
                 <div class="flex justify-between items-center p-4 bg-white/[0.02] rounded-2xl border border-white/5">
                     <span class="text-sm font-bold opacity-60">Tab Disguise</span>
-                    <span class="text-xs bg-red-600/10 text-red-600 px-3 py-1 rounded-full font-black uppercase">Google Drive</span>
+                    <select id="disguise-select" onchange="saveSettings()" class="bg-transparent text-xs text-red-600 font-black uppercase outline-none text-right">
+                        <option value="none" class="bg-black">None</option>
+                        <option value="gdrive" class="bg-black">Google Drive</option>
+                        <option value="classroom" class="bg-black">Classroom</option>
+                        <option value="canvas" class="bg-black">Canvas</option>
+                    </select>
                 </div>
             </section>
         </div>
@@ -69,5 +104,70 @@
             <p class="text-[10px] font-black uppercase tracking-widest text-red-600">Phoenix V1 CORE [v1.0.4-fire]</p>
         </div>
     </div>
+
+    <script>
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || {
+                engine: 'uv',
+                transport: 'wisp',
+                cloak: true,
+                disguise: 'none'
+            };
+
+            setEngine(settings.engine, false);
+            document.getElementById('transport-select').value = settings.transport;
+            document.getElementById('disguise-select').value = settings.disguise;
+            
+            const cloakToggle = document.getElementById('cloak-toggle');
+            if (settings.cloak) {
+                cloakToggle.classList.add('toggle-active', 'bg-red-600');
+                cloakToggle.classList.remove('bg-gray-800');
+            } else {
+                cloakToggle.classList.remove('toggle-active', 'bg-red-600');
+                cloakToggle.classList.add('bg-gray-800');
+            }
+        }
+
+        function setEngine(engine, save = true) {
+            document.getElementById('engine-uv').classList.remove('active');
+            document.getElementById('engine-sj').classList.remove('active');
+            document.getElementById(`engine-${engine}`).classList.add('active');
+            if (save) saveSettings();
+        }
+
+        function toggleCloak() {
+            const toggle = document.getElementById('cloak-toggle');
+            toggle.classList.toggle('toggle-active');
+            if (toggle.classList.contains('toggle-active')) {
+                toggle.classList.replace('bg-gray-800', 'bg-red-600');
+            } else {
+                toggle.classList.replace('bg-red-600', 'bg-gray-800');
+            }
+            saveSettings();
+        }
+
+        function saveSettings() {
+            const settings = {
+                engine: document.getElementById('engine-uv').classList.contains('active') ? 'uv' : 'sj',
+                transport: document.getElementById('transport-select').value,
+                cloak: document.getElementById('cloak-toggle').classList.contains('toggle-active'),
+                disguise: document.getElementById('disguise-select').value
+            };
+            localStorage.setItem('phoenix-settings', JSON.stringify(settings));
+            applyDisguise(settings.disguise);
+        }
+
+        function applyDisguise(type) {
+            const titles = {
+                none: 'Phoenix V1 | Console',
+                gdrive: 'My Drive - Google Drive',
+                classroom: 'Classes',
+                canvas: 'Dashboard'
+            };
+            if (window.parent) window.parent.document.title = titles[type] || titles.none;
+        }
+
+        window.onload = loadSettings;
+    </script>
 </body>
 </html>
