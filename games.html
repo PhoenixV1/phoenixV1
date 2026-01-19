@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix V1 | Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #050505;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            user-select: none;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% -20%, #ff110022 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .phoenix-header {
+            padding: 2.5rem 4rem 1rem 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand-logo {
+            width: 50px;
+            height: 50px;
+            background: #ff3c00;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255, 60, 0, 0.4);
+            color: #000;
+        }
+
+        .system-info {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #ff3c00;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+        }
+
+        .game-shelf {
+            display: flex;
+            flex-wrap: wrap;
+            overflow-y: auto;
+            padding: 2rem 4rem;
+            gap: 24px;
+            flex: 1;
+            z-index: 5;
+            justify-content: center;
+        }
+
+        .game-shelf::-webkit-scrollbar {
+            width: 6px;
+        }
+        .game-shelf::-webkit-scrollbar-thumb {
+            background: #ff3c0033;
+            border-radius: 10px;
+        }
+
+        .game-card {
+            width: 220px;
+            aspect-ratio: 1/1;
+            background: #0a0a0a;
+            border-radius: 24px;
+            border: 2px solid rgba(255, 60, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: #ff3c00;
+            box-shadow: 0 20px 60px rgba(255, 60, 0, 0.3);
+            z-index: 10;
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .game-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .game-title-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 1.5rem 1rem 1.5rem;
+            background: linear-gradient(to top, #000 0%, transparent 100%);
+            font-weight: 800;
+            font-size: 1rem;
+            color: #fff;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover .game-title-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .search-container {
+            padding: 0 4rem;
+            margin-bottom: 0.5rem;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 60, 0, 0.2);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            outline: none;
+            color: #fff;
+            transition: all 0.3s;
+            text-align: center;
+            letter-spacing: 0.1em;
+        }
+
+        .search-bar:focus {
+            border-color: #ff3c00;
+            background: #000;
+            box-shadow: 0 0 30px rgba(255, 60, 0, 0.2);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.5rem 1.5rem;
+            border-radius: 99px;
+            border: 1px solid rgba(255, 60, 0, 0.3);
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            transition: all 0.3s;
+            color: #ff3c00;
+            z-index: 100;
+            background: #000;
+        }
+
+        .back-btn:hover {
+            background: #ff3c00;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">Return to Hub</a>
+
+    <header class="phoenix-header">
+        <div class="brand-section">
+            <div class="brand-logo">
+                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8.5,20C12.1,20 15,17.1 15,13.5C15,12.2 14.6,11.1 14,10.1C14.7,11.3 15.5,12.7 15.5,14C15.5,15.1 15.1,16.1 14.4,16.8C15.2,16 15.7,14.8 15.7,13.5C15.7,11 13.7,9 11.2,9C9.7,9 8.4,9.7 7.6,10.8C8.2,9.8 8.8,8.4 8.8,7C8.8,4.1 6.8,1.6 4.2,1.1C6.2,2.8 7.5,5.3 7.5,8.2C7.5,10.3 6.3,12.1 4.5,13C6.4,12.8 8.1,13.4 9.1,14.4C10.2,15.4 10.7,16.8 10.7,18.3C10.7,19.2 10.5,20.1 10.1,20.8C12.3,19.6 13.8,17.2 13.8,14.5C13.8,11.7 12,9.3 9.5,8.2C11.5,9.5 12.8,11.8 12.8,14.5C12.8,17.5 10.9,20 8.5,20Z"/>
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-xl font-black uppercase tracking-widest text-white leading-none">Arcade</h2>
+                <p class="text-[9px] font-black uppercase tracking-[0.4em] text-red-600 mt-1">Phoenix Gaming Cell</p>
+            </div>
+        </div>
+        <div class="system-info">
+            <div id="clock">00:00</div>
+            <div class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></div>
+        </div>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="search-input" class="search-bar" placeholder="SEARCH SOFTWARE..." autocomplete="off">
+    </div>
+
+    <div id="game-grid" class="game-shelf"></div>
+
+    <script>
+        const coverBase = "https://cdn.jsdelivr.net/gh/gn-math/covers@main";
+        const games = [
+            {id:"0",title:"Bowmasters"},{id:"1",title:"OvO"},{id:"2",title:"OvO 2"},{id:"3",title:"OvO 3 Dimensions"},{id:"4",title:"Gladihoppers"},{id:"5",title:"Ice Dodo"},{id:"6",title:"Block Blast"},{id:"7",title:"Jetpack Joyride"},{id:"8",title:"Friday Night Funkin"},{id:"9",title:"Sprunki"},{id:"10",title:"Temple Run 2"},{id:"11",title:"Stickman Hook"},{id:"13",title:"Attack Hole"},{id:"14",title:"Bridge Race"},{id:"15",title:"Color Water Sort 3D"},{id:"16",title:"Hide N Seek"},{id:"17",title:"Magic Tiles 3"},{id:"18",title:"Stacky Dash"},{id:"19",title:"Supreme Duelist"},{id:"20",title:"Tall Man Run"},{id:"21",title:"Turbo Stars"},{id:"22",title:"Mob Control HTML5"},{id:"23",title:"Pou"},{id:"24",title:"Crossy Road"},{id:"25",title:"Basket Battle"},{id:"26",title:"Amaze"},{id:"27",title:"Geometry Dash Lite"},{id:"28",title:"Basketball Frvr"},{id:"29",title:"Bazooka Boy"},{id:"30",title:"Bottle Jump 3D"},{id:"31",title:"Color Match"},{id:"32",title:"Dig Deep"},{id:"33",title:"Retro Bowl"},{id:"34",title:"Retro Bowl College"},{id:"36",title:"Monster Tracks"},{id:"37",title:"Gobble"},{id:"38",title:"Five Nights at Freddy's"},{id:"39",title:"Five Nights at Freddy's 2"},{id:"40",title:"Five Nights at Freddy's 3"},{id:"41",title:"Five Nights at Freddy's 4"},{id:"42",title:"Road of Fury"},{id:"43",title:"Driven Wild"},{id:"44",title:"Ragdoll Hit"},{id:"45",title:"Vex 1"},{id:"46",title:"Vex 2"},{id:"47",title:"Vex 3"},{id:"48",title:"Vex 3 XMAS"},{id:"49",title:"Vex 4"},{id:"50",title:"Vex 5"},{id:"51",title:"Vex 6"},{id:"52",title:"Vex 7"},{id:"53",title:"Vex 8"},{id:"54",title:"Vex Challenges"},{id:"55",title:"Vex X3M"},{id:"56",title:"Vex X3M 2"},{id:"58",title:"1v1.LoL"},{id:"59",title:"A Dance of Fire and Ice"},{id:"60",title:"Achievement Unlocked"},{id:"61",title:"Achievement Unlocked 2"},{id:"62",title:"Achievement Unlocked 3"},{id:"63",title:"Angry Birds"},{id:"64",title:"Backrooms"},{id:"65",title:"Baldi's Basics"},{id:"66",title:"Basket Random"},{id:"67",title:"Big Tower Tiny Square"},{id:"68",title:"Big NEON Tower Tiny Square"},{id:"69",title:"Big ICE Tower Tiny Square"},{id:"70",title:"BitLife"},{id:"71",title:"Bloons TD"},{id:"72",title:"Bloons TD 2"},{id:"73",title:"Bloons TD 3"},{id:"74",title:"Bloons TD 4"},{id:"75",title:"Bloons TD 5"},{id:"76",title:"Bob The Robber 2"},{id:"77",title:"Boxing Random"},{id:"78",title:"Burrito Bison"},{id:"79",title:"Cannon Basketball"},{id:"80",title:"Cannon Basketball 2"},{id:"81",title:"Cluster Rush"},{id:"82",title:"Cookie Clicker"},{id:"83",title:"Coreball"},{id:"84",title:"Cubefield"},{id:"85",title:"Cut the Rope"},{id:"86",title:"Draw Climber"},{id:"90",title:"Granny"},{id:"91",title:"Gunspin"},{id:"92",title:"Highway Racer 2"},{id:"93",title:"Johnny Trigger"},{id:"94",title:"Journey Downhill"},{id:"95",title:"Line Rider"},{id:"96",title:"Moto X3M"},{id:"97",title:"Moto X3M 2"},{id:"98",title:"Moto X3M 3"},{id:"99",title:"Moto X3M Spooky"},{id:"100",title:"Moto X3M Winter"},{id:"101",title:"Ninja vs EvilCorp"},{id:"102",title:"Paper.io 2"},{id:"103",title:"The World's Hardest Game"},{id:"104",title:"The World's Hardest Game 3"},{id:"105",title:"The World's Hardest Game 4"},{id:"106",title:"This Is The Only Level"},{id:"107",title:"This Is The Only Level 2"},{id:"108",title:"Tiny Fishing"},{id:"109",title:"Tomb Of The Mask"},{id:"110",title:"Toss The Turtle"},{id:"111",title:"Tube Jumpers"},{id:"112",title:"Wordle"},{id:"114",title:"2048"},{id:"115",title:"8 Ball Pool"},{id:"116",title:"Offroad Mountain Bike"},{id:"117",title:"Space Waves"},{id:"118",title:"Solar Smash"},{id:"119",title:"Snow Rider 3D"},{id:"120",title:"Fortzone Battle Royale"},{id:"121",title:"Brawl Guys.io"},{id:"122",title:"Survival Race"},{id:"123",title:"Poly Track"},{id:"124",title:"Moto X3M Pool Party"},{id:"125",title:"Granny 2"},{id:"126",title:"Granny 3"},{id:"127",title:"Fashion Battle"},{id:"128",title:"Slice it All"},{id:"129",title:"Flappy Bird"},{id:"130",title:"osu!"},{id:"146",title:"8 Ball Classic"},{id:"147",title:"Angry Birds Showdown"},{id:"148",title:"Archery World Tour"},{id:"149",title:"Ball Blast"},{id:"150",title:"Cannon Balls 3D"},{id:"151",title:"Chess Classic"},{id:"152",title:"Draw the Line"},{id:"153",title:"Flappy Dunk"},{id:"154",title:"Fork n Sausage"},{id:"155",title:"Guess Their Answer"},{id:"156",title:"Harvest.io"},{id:"157",title:"Hill Climb Racing Lite"},{id:"158",title:"Pac-Man Superfast"},{id:"159",title:"Parking Rush"},{id:"160",title:"Race Master 3D"},{id:"161",title:"State.io"},{id:"162",title:"Tower Crash 3D"},{id:"163",title:"Trivia Crack"},{id:"164",title:"Crazy Cattle 3D"},{id:"165",title:"Cheese Chompers 3D"},{id:"166",title:"Bad Parenting 1"},{id:"167",title:"Blade Ball"},{id:"168",title:"Blocky Snakes"},{id:"169",title:"Bloxorz"},{id:"170",title:"Big Tower Tiny Square 2"},{id:"171",title:"Candy Crush"},{id:"172",title:"Melon Playground"},{id:"173",title:"Drift Hunters"},{id:"174",title:"World Box"},{id:"175",title:"Run 1"},{id:"176",title:"Run 2"},{id:"177",title:"Run 3"},{id:"178",title:"Swords and Souls"},{id:"181",title:"Minecraft 1.8.8"},{id:"182",title:"Minecraft 1.12.2"},{id:"183",title:"Minecraft 1.21.4"},{id:"185",title:"Five Nights at Freddy's: Sister Location"},{id:"186",title:"Ragdoll Archers"},{id:"187",title:"Papers, Please"},{id:"188",title:"Scrap Metal 3"},{id:"190",title:"Five Nights at Freddy's: World"},{id:"191",title:"Five Nights at Freddy's: Pizza Simulator"},{id:"192",title:"Five Nights at Freddy's: Ultimate Custom Night"},{id:"193",title:"Do NOT Take This Cat Home"},{id:"194-m",title:"People Playground"},{id:"195",title:"R.E.P.O"},{id:"196",title:"ULTRAKILL"},{id:"197",title:"Elastic Man"},{id:"198",title:"Slope"},{id:"199",title:"Time Shooter 1"},{id:"200",title:"Time Shooter 2"},{id:"201",title:"Time Shooter 3: SWAT"},{id:"202",title:"Carrom Clash"},{id:"203",title:"DOOM"},{id:"204",title:"Five Nights at Winston's"},{id:"205",title:"Buckshot Roulette"},{id:"206",title:"Tunnel Rush"},{id:"207",title:"Snowbattle.io"},{id:"208",title:"Rolly Vortex"},{id:"209",title:"Draw the Hill"},{id:"210",title:"Dragon vs Bricks"},{id:"211",title:"Death Run 3D"},{id:"212",title:"Cut the Rope"},{id:"213",title:"Cut the Rope: Time Travel"},{id:"214",title:"Cut the Rope: Holiday Gift"},{id:"215",title:"Bendy and the Ink Machine"},{id:"216",title:"That's Not My Neighbor"},{id:"217",title:"Hotline Miami"},{id:"218",title:"Papa's Bakeria"},{id:"219",title:"Papa's Burgeria"},{id:"220",title:"Papa's Cheeseria"},{id:"221",title:"Papa's Cupcakeria"},{id:"222",title:"Papa's Donuteria"},{id:"223",title:"Papa's Freezeria"},{id:"224",title:"Papa's Hot Doggeria"},{id:"225",title:"Papa's Pancakeria"},{id:"226",title:"Papa's Pastaria"},{id:"227",title:"Papa's Pizeria"},{id:"228",title:"Papa's Scooperia"},{id:"229",title:"Papa's Sushiria"},{id:"230",title:"Papa's Taco Mia"},{id:"231",title:"Papa's Wingeria"},{id:"232",title:"Plants vs Zombies"},{id:"233",title:"Superhot"},{id:"234",title:"Duck Life"},{id:"235",title:"Duck Life 2"},{id:"236",title:"Duck Life 3"},{id:"237",title:"Duck Life 4"},{id:"238",title:"Duck Life 5"},{id:"239",title:"Red Ball"},{id:"240",title:"Red Ball 2"},{id:"241",title:"Red Ball 3"},{id:"242",title:"Red Ball 4"},{id:"245",title:"Wheely"},{id:"246",title:"Wheely 2"},{id:"247",title:"Wheely 3"},{id:"248",title:"Wheely 4"},{id:"249",title:"Wheely 5"},{id:"250",title:"Wheely 6"},{id:"251",title:"Wheely 7"},{id:"252",title:"Wheely 8"},{id:"257",title:"Google Baseball"},{id:"258",title:"A Bite at Freddy's"},{id:"259",title:"Class of '09"},{id:"260",title:"RE:RUN"},{id:"261",title:"Fruit Ninja"},{id:"262",title:"Half Life"},{id:"263",title:"Quake III Arena"},{id:"264",title:"Escape Road"},{id:"265",title:"Escape Road 2"},{id:"266",title:"Speed Stars"},{id:"267",title:"Pizza Tower"},{id:"268",title:"Bacon May Die"},{id:"269",title:"Bad Ice Cream"},{id:"270",title:"Bad Ice Cream 2"},{id:"271",title:"Bad Ice Cream 3"},{id:"272",title:"Basketball Stars"},{id:"273",title:"BlockPost"},{id:"274",title:"CircloO"},{id:"275",title:"CircloO 2"},{id:"276",title:"Drift Boss"},{id:"277",title:"Evil Glitch"},{id:"278",title:"Madalin Stunt Cars 2"},{id:"279",title:"Madalin Stunt Cars 3"},{id:"280",title:"Papery Planes"},{id:"281",title:"Pixel Gun Survival"},{id:"282",title:"Protektor"},{id:"283",title:"Rooftop Snipers"},{id:"285",title:"Basket Bros"},{id:"286",title:"Endoparasitic"},{id:"287",title:"Riddle School"},{id:"288",title:"Riddle School 2"},{id:"289",title:"Riddle School 3"},{id:"290",title:"Riddle School 4"},{id:"291",title:"Riddle School 5"},{id:"292",title:"Riddle Transfer"},{id:"293",title:"Riddle Transfer 2"},{id:"294",title:"Idle Dice"},{id:"295",title:"12 Mini Battles"},{id:"297",title:"Minecraft 1.5.2"},{id:"302",title:"Little Runmo"},{id:"303",title:"Territorial.io"},{id:"304",title:"Alien Hominid"},{id:"305",title:"Tanuki Sunset"},{id:"307",title:"Rainbow Obby"},{id:"309",title:"Sandboxels"},{id:"310",title:"Dreadhead Parkour"},{id:"311",title:"Sandtris"},{id:"313",title:"Minesweeper Mania"},{id:"314",title:"Super Mario 63"},{id:"315",title:"Jelly Mario"},{id:"317",title:"sandspiel"},{id:"319",title:"Build a Queen"},{id:"320",title:"3D Bowling"},{id:"322",title:"Sushi Roll"},{id:"323",title:"Find the Alien"},{id:"328",title:"Om Nom Run"},{id:"332",title:"Going Balls"},{id:"333",title:"Fancy Pants Adventure"},{id:"334",title:"Fancy Pants Adventure 2"},{id:"335",title:"Fancy Pants Adventure 3"},{id:"338",title:"Getaway Shootout"},{id:"339",title:"House of Hazards"},{id:"340",title:"Learn to Fly"},{id:"341",title:"Learn to Fly 2"},{id:"342",title:"Learn to Fly 3"},{id:"344",title:"Raft Wars"},{id:"345",title:"Raft Wars 2"},{id:"346",title:"Sort the Court"},{id:"353",title:"Blumgi Rocket"},{id:"354",title:"Adventure Capatalist"},{id:"357",title:"Dadish"},{id:"358",title:"Dadish 3D"},{id:"360",title:"EvoWars.io"},{id:"361",title:"Google Feud"},{id:"362",title:"Idle Breakout"},{id:"365",title:"JustFall.lol"},{id:"368",title:"Slope 2"},{id:"369",title:"Slowroads"},{id:"370",title:"Smash Karts"},{id:"373",title:"Stickman Climb"},{id:"423",title:"WebFishing"},{id:"427",title:"OMORI"},{id:"435",title:"A Small World Cup"},{id:"436",title:"Awesome Tanks"},{id:"438",title:"Awesome Tanks 2"},{id:"440",title:"Celeste PICO"},{id:"445",title:"Kindergarten"},{id:"446",title:"Kindergarten 2"},{id:"450",title:"Amanda the Adventurer"},{id:"451",title:"Slender: The 8 Pages"},{id:"456",title:"Undertale Yellow"},{id:"461",title:"Slither.io"},{id:"465",title:"Cuphead"},{id:"468",title:"Hollow Knight"},{id:"470",title:"Doodle Jump"},{id:"501",title:"Kindergarten 3"},{id:"508",title:"Super Mario Bros"},{id:"542",title:"Karlson"},{id:"557",title:"Getting Over It with Bennett Foddy"},{id:"581",title:"BuildNow.gg"},{id:"588",title:"Super Mario 64"},{id:"591",title:"Slime Rancher"},{id:"623",title:"Celeste"},{id:"624",title:"Happy Wheels"}
+        ];
+
+        const grid = document.getElementById('game-grid');
+        const searchInput = document.getElementById('search-input');
+
+        function openGame(id) {
+            window.location.href = `iframe.html?id=${id}`;
+        }
+
+        function renderGames() {
+            grid.innerHTML = '';
+            const query = searchInput.value.toLowerCase();
+            const filtered = games.filter(g => g.title.toLowerCase().includes(query));
+
+            filtered.forEach((game) => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                const thumbUrl = `${coverBase}/${game.id}.png`;
+                card.innerHTML = `
+                    <img src="${thumbUrl}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=600&fit=crop'">
+                    <div class="game-title-overlay">${game.title}</div>
+                `;
+                card.onclick = () => openGame(game.id);
+                grid.appendChild(card);
+            });
+        }
+
+        searchInput.oninput = renderGames;
+
+        function updateClock() {
+            document.getElementById('clock').textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        renderGames();
+    </script>
+</body>
+</html>
