@@ -33,7 +33,7 @@
             height: 100%;
             border: none;
             z-index: 1000;
-            pointer-events: none; /* Let overlay handle its own pointer events */
+            pointer-events: none;
         }
 
         #loading-screen {
@@ -97,38 +97,31 @@
         } else {
             const gameUrl = `${htmlBase}/${gameId}.html`;
 
-            fetch(gameUrl)
-                .then(r => {
-                    if (!r.ok) throw new Error("CELL NOT FOUND");
-                    return r.text();
-                })
-                .then(html => {
-                    // We use blob to make sure the iframe content is self-contained
-                    const blob = new Blob([html], { type: 'text/html' });
-                    const blobUrl = URL.createObjectURL(blob);
-                    gameIframe.src = blobUrl;
-                    
-                    // Hide loading after a slight delay to ensure visual smoothness
-                    setTimeout(() => {
-                        loadingScreen.style.opacity = '0';
-                        setTimeout(() => loadingScreen.style.display = 'none', 500);
-                    }, 1200);
-                })
-                .catch(err => {
-                    console.error(err);
-                    document.body.innerHTML = `
-                        <div style="background:#050505; color:#ff3c00; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'Outfit';">
-                            <h1 style="font-weight:900; letter-spacing:0.2em; text-transform:uppercase;">Core Error</h1>
-                            <p style="opacity:0.5; margin-top:10px;">Execution failed. Cell ${gameId} could not be reached.</p>
-                            <a href="games.html" style="margin-top:2rem; padding:10px 30px; border:1px solid #ff3c00; border-radius:10px; color:#ff3c00; text-decoration:none; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:0.2em;">Back to Hub</a>
-                        </div>
-                    `;
-                });
+            // Set the src directly to the CDN URL so relative assets resolve correctly
+            gameIframe.src = gameUrl;
+
+            // Handle iframe loading state
+            gameIframe.onload = () => {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => loadingScreen.style.display = 'none', 500);
+                }, 800);
+            };
+
+            // Fallback for failed loads
+            gameIframe.onerror = () => {
+                 document.body.innerHTML = `
+                    <div style="background:#050505; color:#ff3c00; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'Outfit';">
+                        <h1 style="font-weight:900; letter-spacing:0.2em; text-transform:uppercase;">Core Error</h1>
+                        <p style="opacity:0.5; margin-top:10px;">Execution failed. Cell ${gameId} could not be reached.</p>
+                        <a href="games.html" style="margin-top:2rem; padding:10px 30px; border:1px solid #ff3c00; border-radius:10px; color:#ff3c00; text-decoration:none; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:0.2em;">Back to Hub</a>
+                    </div>
+                `;
+            };
         }
 
-        // Relay keyboard events from main page to the overlay if needed
+        // Relay keyboard events from main page to the overlay
         window.addEventListener('keydown', (e) => {
-            // Forward Alt+G to the overlay frame if it doesn't already catch it
             if (e.altKey && e.key.toLowerCase() === 'g') {
                 overlayFrame.contentWindow.postMessage('toggle-hud', '*');
             }
