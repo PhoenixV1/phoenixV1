@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix V1 | Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background: #0a0000;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 50% 120%, #ff1100 0%, transparent 60%),
+                radial-gradient(circle at 15% 15%, #4a0000 0%, transparent 35%),
+                radial-gradient(circle at 85% 15%, #4a0000 0%, transparent 35%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .brand {
+            margin-bottom: 2rem;
+            text-align: center;
+            user-select: none;
+            z-index: 10;
+        }
+
+        .brand h1 {
+            font-size: 7rem;
+            font-weight: 800;
+            color: #ff3c00;
+            letter-spacing: -0.07em;
+            margin: 0;
+            line-height: 0.8;
+            text-transform: lowercase;
+            filter: drop-shadow(0 0 50px rgba(255, 60, 0, 0.8));
+            animation: phoenixPulse 4s infinite ease-in-out;
+        }
+
+        @keyframes phoenixPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 40px rgba(255, 60, 0, 0.6)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 80px rgba(255, 60, 0, 1)); }
+        }
+
+        .brand p {
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.8em;
+            color: #ff3c00;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .search-area {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            z-index: 50;
+        }
+
+        .search-box {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff3c00;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.8rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 40px rgba(255, 60, 0, 0.2);
+        }
+
+        .search-box:focus-within {
+            transform: scale(1.03);
+            box-shadow: 0 0 60px rgba(255, 60, 0, 0.4);
+            background: #000;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            width: 100%;
+            font-size: 1.1rem;
+            margin-left: 1rem;
+            font-weight: 500;
+        }
+
+        .search-box input::placeholder {
+            color: #330000;
+        }
+
+        .online-status {
+            font-size: 10px;
+            font-weight: 900;
+            color: #ff3c00;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            opacity: 0.4;
+        }
+
+        #navbar-hud {
+            position: fixed;
+            bottom: -250px;
+            left: 0;
+            width: 100%;
+            transition: bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+        }
+        #navbar-hud.visible { bottom: 60px; }
+
+        .nav-link {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-accent-line {
+            width: 0%;
+            height: 3px;
+            background: #ff3c00;
+            transition: width 0.8s ease;
+            box-shadow: 0 0 20px #ff3c00;
+        }
+    </style>
+</head>
+<body>
+    <audio id="phoenixSound" src="Phoenix.wav"></audio>
+
+    <div class="brand">
+        <h1>phoenix</h1>
+        <p>"FIRST ZERO CORE"</p>
+    </div>
+
+    <div class="search-area">
+        <div class="search-box">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <input type="text" id="mainSearch" placeholder="ignite search..." autocomplete="off">
+        </div>
+        <div class="online-status">
+            PHOENIX CORE v1.0 ONLINE
+        </div>
+    </div>
+
+    <div id="navbar-hud">
+        <div class="flex flex-col items-center w-full max-w-3xl mx-auto px-10">
+            <div class="relative w-full flex justify-between items-center px-12 mb-6">
+                <a href="games.html" class="nav-link flex flex-col items-center gap-2 group">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-black border border-red-600/40 hover:bg-red-600 hover:text-black transition-all">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] group-hover:text-red-500">Games</span>
+                </a>
+                <a href="apps.html" class="nav-link flex flex-col items-center gap-2 group">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-black border border-red-600/40 hover:bg-red-600 hover:text-black transition-all">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] group-hover:text-red-500">Apps</span>
+                </a>
+                <a href="browser.html" class="nav-link flex flex-col items-center gap-2 group">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-black border border-red-600/40 hover:bg-red-600 hover:text-black transition-all">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] group-hover:text-red-500">Browser</span>
+                </a>
+                <a href="settings.html" class="nav-link flex flex-col items-center gap-2 group">
+                    <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-black border border-red-600/40 hover:bg-red-600 hover:text-black transition-all">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] group-hover:text-red-500">Settings</span>
+                </a>
+            </div>
+            <div class="nav-accent-line"></div>
+        </div>
+    </div>
+
+    <script>
+        const navbar = document.getElementById('navbar-hud');
+        const phoenixSound = document.getElementById('phoenixSound');
+        const mainSearch = document.getElementById('mainSearch');
+
+        mainSearch.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = mainSearch.value.trim();
+                if (query) {
+                    window.location.href = `browser.html?q=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === ',' || e.code === 'Comma') {
+                if (document.activeElement !== mainSearch) {
+                    e.preventDefault();
+                    toggleNavbar();
+                }
+            }
+        });
+
+        function toggleNavbar() {
+            const links = document.querySelectorAll('.nav-link');
+            const line = document.querySelector('.nav-accent-line');
+
+            if (navbar.classList.contains('visible')) {
+                navbar.classList.remove('visible');
+                links.forEach(l => {
+                    l.style.opacity = '0';
+                    l.style.transform = 'translateY(30px)';
+                });
+                line.style.width = '0%';
+            } else {
+                navbar.classList.add('visible');
+                phoenixSound.currentTime = 0;
+                phoenixSound.play().catch(() => {});
+
+                links.forEach((l, i) => {
+                    setTimeout(() => {
+                        l.style.opacity = '1';
+                        l.style.transform = 'translateY(0)';
+                    }, 60 * i);
+                });
+
+                setTimeout(() => {
+                    line.style.width = '100%';
+                }, (links.length * 60) + 100);
+            }
+        }
+
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                phoenixSound.currentTime = 0;
+                phoenixSound.volume = 0.3;
+                phoenixSound.play().catch(() => {});
+            });
+        });
+    </script>
+</body>
+</html>
