@@ -7,9 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     
-    <script src="/uv/uv.bundle.js" defer></script>
+    <script src="/uv/uv.bundle.js" onerror="window.uvLoaded=false" onload="window.uvLoaded=true" defer></script>
     <script src="/uv/uv.config.js" defer></script>
-    <script src="/scramject/scramject.bundle.js" defer></script>
+    <script src="/scramject/scramject.bundle.js" onerror="window.sjLoaded=false" onload="window.sjLoaded=true" defer></script>
 
     <style>
         body {
@@ -178,9 +178,30 @@
             background: #fff;
             box-shadow: 0 6px 20px rgba(255, 60, 0, 0.5);
         }
+
+        #dependency-warning {
+            display: none;
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #7f1d1d;
+            color: #fca5a5;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            z-index: 1000;
+            border: 1px solid #ef4444;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+        }
     </style>
 </head>
 <body>
+    <div id="dependency-warning">Missing Core Scripts: Proxy functionality disabled</div>
+
     <div id="sidebar" class="sidebar">
         <div class="flex items-center gap-3 mb-10 px-2">
             <a href="index.html" class="w-12 h-12 rounded-2xl bg-red-600/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:scale-110 transition-transform">
@@ -225,10 +246,24 @@
         const urlInput = document.getElementById('url-input');
         const tabList = document.getElementById('tab-list');
         const sidebar = document.getElementById('sidebar');
+        const warning = document.getElementById('dependency-warning');
 
         let tabs = [];
         let activeTabId = null;
         const defaultSearch = "https://duckduckgo.com/?q=";
+
+        function checkDependencies() {
+            const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
+            const isUv = settings.engine === 'uv';
+            const isLoaded = isUv ? window.uvLoaded : window.sjLoaded;
+
+            if (isLoaded === false) {
+                warning.style.display = 'block';
+                return false;
+            }
+            warning.style.display = 'none';
+            return true;
+        }
 
         function renderTabs() {
             tabList.innerHTML = '';
@@ -250,7 +285,20 @@
         function switchTab(id) {
             activeTabId = id;
             const tab = tabs.find(t => t.id === id);
-            iframe.src = tab.url;
+            
+            if (tab.url.startsWith('http') && !tab.url.includes(location.host)) {
+               const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
+               if (settings.engine === 'uv' && window.uvLoaded) {
+                   iframe.src = __uv$config.prefix + __uv$config.encodeUrl(tab.url);
+               } else if (settings.engine === 'sj' && window.sjLoaded) {
+                   iframe.src = '/sj/' + btoa(tab.url);
+               } else {
+                   iframe.src = tab.url;
+               }
+            } else {
+               iframe.src = tab.url;
+            }
+
             urlInput.value = tab.url.includes('duckduckgo.com') ? "" : tab.url;
             renderTabs();
         }
@@ -293,14 +341,15 @@
                 const activeTab = tabs.find(t => t.id === activeTabId);
                 activeTab.url = url;
                 activeTab.title = url.split('//')[1]?.split('/')[0] || url;
-                iframe.src = url;
-                renderTabs();
+                switchTab(activeTabId);
             }
         });
 
         function goBack() { try { iframe.contentWindow.history.back(); } catch(e) {} }
         function goForward() { try { iframe.contentWindow.history.forward(); } catch(e) {} }
-        function reload() { iframe.src = iframe.src; }
+        function reload() { switchTab(activeTabId); }
+
+        setInterval(checkDependencies, 2000);
 
         const params = new URLSearchParams(window.location.search);
         const query = params.get('q');
