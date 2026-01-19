@@ -7,9 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     
-    <script src="/uv/uv.bundle.js" defer></script>
+    <script src="/uv/uv.bundle.js" onerror="window.uvLoaded=false" onload="window.uvLoaded=true" defer></script>
     <script src="/uv/uv.config.js" defer></script>
-    <script src="/scramject/scramject.bundle.js" defer></script>
+    <script src="/scramject/scramject.bundle.js" onerror="window.sjLoaded=false" onload="window.sjLoaded=true" defer></script>
 
     <style>
         body {
@@ -60,6 +60,7 @@
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid #1a1a18;
+            position: relative;
         }
 
         .toolbar {
@@ -98,6 +99,19 @@
             background: #000;
             border: none;
         }
+
+        #status-msg {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #ff3c00;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -113,24 +127,61 @@
             <div class="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_8px_rgba(255,0,0,0.5)]"></div>
             <span>Stealth Node 1</span>
         </div>
-        <div class="tab-item">
+        <div class="tab-item" onclick="location.href='browser.html'">
             <div class="w-2 h-2 rounded-full bg-gray-800"></div>
-            <span>Anonymous Tab</span>
+            <span>Open Browser</span>
         </div>
     </div>
 
     <div class="main-view">
         <div class="toolbar">
             <div class="flex gap-4">
-                <svg class="w-4 h-4 text-gray-700 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                <svg class="w-4 h-4 text-gray-700 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <svg onclick="history.back()" class="w-4 h-4 text-gray-700 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                <svg onclick="history.forward()" class="w-4 h-4 text-gray-700 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </div>
             <div class="address-input">
                 <input type="text" placeholder="enter url to cloak..." id="proxy-input">
             </div>
-            <button class="text-xs font-black uppercase text-red-600 px-4 hover:text-red-400">Cloak</button>
+            <button onclick="cloak()" class="text-xs font-black uppercase text-red-600 px-4 hover:text-red-400">Cloak</button>
         </div>
         <iframe src="about:blank" id="uv-viewport"></iframe>
+        <div id="status-msg">Phoenix Stealth Mode: Initializing...</div>
     </div>
+
+    <script>
+        const input = document.getElementById('proxy-input');
+        const iframe = document.getElementById('uv-viewport');
+        const status = document.getElementById('status-msg');
+
+        function cloak() {
+            const url = input.value.trim();
+            if (!url) return;
+
+            const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
+            
+            if (settings.engine === 'uv' && window.uvLoaded) {
+                status.innerText = "UV Engine: Active";
+                iframe.src = __uv$config.prefix + __uv$config.encodeUrl(url.startsWith('http') ? url : 'https://' + url);
+            } else if (settings.engine === 'sj' && window.sjLoaded) {
+                status.innerText = "Scramjet Engine: Active";
+                iframe.src = '/sj/' + btoa(url.startsWith('http') ? url : 'https://' + url);
+            } else {
+                status.innerText = "Core scripts missing. Direct mode only.";
+                iframe.src = url.startsWith('http') ? url : 'https://' + url;
+            }
+        }
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') cloak();
+        });
+
+        setInterval(() => {
+            const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
+            const loaded = settings.engine === 'uv' ? window.uvLoaded : window.sjLoaded;
+            if (loaded === false) {
+                status.innerText = "Waiting for local " + (settings.engine === 'uv' ? 'Ultraviolet' : 'Scramjet') + " scripts...";
+            }
+        }, 2000);
+    </script>
 </body>
 </html>
