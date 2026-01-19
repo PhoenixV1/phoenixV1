@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Proxy | Stealth</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="/uv/uv.bundle.js" defer></script>
+    <script src="/uv/uv.config.js" defer></script>
+    <script src="/scramject/scramject.bundle.js" defer></script>
+
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background: #080806;
+            color: #eee;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #0d0d0c;
+            border-right: 1px solid #1a1a18;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            gap: 0.5rem;
+        }
+
+        .tab-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-item.active {
+            background: rgba(255, 60, 0, 0.1);
+            color: #ff3c00;
+            border: 1px solid rgba(255, 60, 0, 0.1);
+        }
+
+        .main-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #1a1a18;
+        }
+
+        .toolbar {
+            height: 48px;
+            background: #0d0d0c;
+            border-bottom: 1px solid #1a1a18;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            gap: 1rem;
+        }
+
+        .address-input {
+            flex: 1;
+            background: #151514;
+            border-radius: 10px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            font-size: 0.8rem;
+            color: #555;
+        }
+
+        .address-input input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: #ff3c00;
+            font-weight: 600;
+        }
+
+        iframe {
+            flex: 1;
+            background: #000;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="flex items-center gap-3 mb-6 px-2">
+            <a href="index.html" class="w-8 h-8 rounded-lg bg-red-600/10 border border-red-500/20 flex items-center justify-center text-red-500">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            </a>
+            <span class="text-[10px] font-black uppercase tracking-widest text-red-900">Phoenix Stealth</span>
+        </div>
+
+        <div class="tab-item active">
+            <div class="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_8px_rgba(255,0,0,0.5)]"></div>
+            <span>Stealth Node 1</span>
+        </div>
+        <div class="tab-item">
+            <div class="w-2 h-2 rounded-full bg-gray-800"></div>
+            <span>Anonymous Tab</span>
+        </div>
+    </div>
+
+    <div class="main-view">
+        <div class="toolbar">
+            <div class="flex gap-4">
+                <svg class="w-4 h-4 text-gray-700 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                <svg class="w-4 h-4 text-gray-700 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </div>
+            <div class="address-input">
+                <input type="text" placeholder="enter url to cloak..." id="proxy-input">
+            </div>
+            <button class="text-xs font-black uppercase text-red-600 px-4 hover:text-red-400">Cloak</button>
+        </div>
+        <iframe src="about:blank" id="uv-viewport"></iframe>
+    </div>
+</body>
+</html>
