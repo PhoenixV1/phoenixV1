@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Browser</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="/uv/uv.bundle.js" defer></script>
+    <script src="/uv/uv.config.js" defer></script>
+    <script src="/scramject/scramject.bundle.js" defer></script>
+
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background: #0d0202;
+            color: #eee;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 240px;
+            min-width: 240px;
+            background: rgba(10, 0, 0, 0.98);
+            border-right: 1px solid #ff3c0033;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            gap: 0.5rem;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            min-width: 0;
+            padding: 0;
+            overflow: hidden;
+            transform: translateX(-100%);
+        }
+
+        .tab-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .tab-item:hover {
+            background: rgba(255, 60, 0, 0.08);
+            color: #bbb;
+        }
+
+        .tab-item.active {
+            background: rgba(255, 60, 0, 0.15);
+            color: #ff3c00;
+            border: 1px solid rgba(255, 60, 0, 0.3);
+            font-weight: 700;
+        }
+
+        .main-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin: 12px;
+            background: #000;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #1a0000;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            top: 24px;
+            left: -12px;
+            z-index: 100;
+            background: #ff3c00;
+            color: #000;
+            width: 24px;
+            height: 52px;
+            border-radius: 0 12px 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: left 0.3s;
+            box-shadow: 0 0 20px rgba(255, 60, 0, 0.5);
+        }
+        
+        .sidebar.collapsed + .main-view .sidebar-toggle {
+            left: 0;
+        }
+
+        .toolbar {
+            height: 64px;
+            background: #0a0000;
+            border-bottom: 1px solid #ff3c0022;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            gap: 1.5rem;
+        }
+
+        .address-bar {
+            flex: 1;
+            background: #111;
+            border-radius: 16px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            font-size: 0.95rem;
+            color: #ff3c00;
+            border: 1px solid #ff3c0022;
+        }
+
+        .address-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: inherit;
+            font-weight: 600;
+        }
+
+        iframe {
+            flex: 1;
+            background: #fff;
+            border: none;
+        }
+
+        .tab-close {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .tab-item:hover .tab-close {
+            opacity: 0.6;
+        }
+
+        .tab-close:hover {
+            opacity: 1 !important;
+            color: #fff;
+        }
+
+        .new-tab-btn {
+            background: #ff3c00;
+            color: #000;
+            border-radius: 16px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 15px rgba(255, 60, 0, 0.3);
+            margin-top: 1rem;
+        }
+
+        .new-tab-btn:hover {
+            transform: translateY(-2px);
+            background: #fff;
+            box-shadow: 0 6px 20px rgba(255, 60, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar" class="sidebar">
+        <div class="flex items-center gap-3 mb-10 px-2">
+            <a href="index.html" class="w-12 h-12 rounded-2xl bg-red-600/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:scale-110 transition-transform">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            </a>
+            <span class="text-[14px] font-black uppercase tracking-[0.2em] text-red-600">Phoenix Web</span>
+            <div onclick="toggleSidebar()" class="ml-auto cursor-pointer text-red-950 hover:text-red-500">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M4 6h16M4 12h16M4 18h7"/></svg>
+            </div>
+        </div>
+
+        <div id="tab-list" class="space-y-1 overflow-y-auto flex-1 pr-1 custom-scrollbar">
+        </div>
+        
+        <div class="mt-auto pt-4 border-t border-red-900/10">
+            <div class="new-tab-btn" onclick="newTab()">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M12 4v16m8-8H4"/></svg>
+                <span>New Nexus Tab</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-view">
+        <div onclick="toggleSidebar()" class="sidebar-toggle">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="4" d="M9 5l7 7-7 7"/></svg>
+        </div>
+        <div class="toolbar">
+            <div class="flex gap-8 text-red-950">
+                <svg onclick="goBack()" class="w-6 h-6 hover:text-red-500 cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                <svg onclick="goForward()" class="w-6 h-6 hover:text-red-500 cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                <svg onclick="reload()" class="w-6 h-6 hover:text-red-500 cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </div>
+            <div class="address-bar">
+                <input type="text" id="url-input" value="" spellcheck="false" placeholder="Ignite a search or URL...">
+            </div>
+        </div>
+        <iframe id="browser-iframe" src=""></iframe>
+    </div>
+
+    <script>
+        const iframe = document.getElementById('browser-iframe');
+        const urlInput = document.getElementById('url-input');
+        const tabList = document.getElementById('tab-list');
+        const sidebar = document.getElementById('sidebar');
+
+        let tabs = [];
+        let activeTabId = null;
+        const defaultSearch = "https://duckduckgo.com/?q=";
+
+        function renderTabs() {
+            tabList.innerHTML = '';
+            tabs.forEach(tab => {
+                const tabEl = document.createElement('div');
+                tabEl.className = `tab-item ${tab.id === activeTabId ? 'active' : ''}`;
+                tabEl.onclick = () => switchTab(tab.id);
+                tabEl.innerHTML = `
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="w-2.5 h-2.5 rounded-full flex-shrink-0 ${tab.id === activeTabId ? 'bg-red-500 shadow-[0_0_10px_#ff3c00]' : 'bg-red-950'}"></div>
+                        <span class="truncate max-w-[130px]">${tab.title}</span>
+                    </div>
+                    ${tabs.length > 1 ? `<svg class="tab-close w-5 h-5 p-1 rounded-full hover:bg-red-600/20" onclick="closeTab(event, ${tab.id})" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>` : ''}
+                `;
+                tabList.appendChild(tabEl);
+            });
+        }
+
+        function switchTab(id) {
+            activeTabId = id;
+            const tab = tabs.find(t => t.id === id);
+            iframe.src = tab.url;
+            urlInput.value = tab.url.includes('duckduckgo.com') ? "" : tab.url;
+            renderTabs();
+        }
+
+        function newTab(url = "https://duckduckgo.com") {
+            const id = Date.now();
+            tabs.push({ id, title: 'New Tab', url: url });
+            switchTab(id);
+        }
+
+        function closeTab(e, id) {
+            e.stopPropagation();
+            if (tabs.length === 1) return;
+            const index = tabs.findIndex(t => t.id === id);
+            tabs = tabs.filter(t => t.id !== id);
+            if (activeTabId === id) {
+                const nextTab = tabs[index] || tabs[tabs.length - 1];
+                switchTab(nextTab.id);
+            } else {
+                renderTabs();
+            }
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('collapsed');
+        }
+
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                let url = urlInput.value.trim();
+                if (!url) return;
+
+                if (!url.startsWith('http')) {
+                    if (url.includes('.') && !url.includes(' ')) {
+                        url = 'https://' + url;
+                    } else {
+                        url = `${defaultSearch}${encodeURIComponent(url)}`;
+                    }
+                }
+                const activeTab = tabs.find(t => t.id === activeTabId);
+                activeTab.url = url;
+                activeTab.title = url.split('//')[1]?.split('/')[0] || url;
+                iframe.src = url;
+                renderTabs();
+            }
+        });
+
+        function goBack() { try { iframe.contentWindow.history.back(); } catch(e) {} }
+        function goForward() { try { iframe.contentWindow.history.forward(); } catch(e) {} }
+        function reload() { iframe.src = iframe.src; }
+
+        const params = new URLSearchParams(window.location.search);
+        const query = params.get('q');
+        if (query) {
+            newTab(`${defaultSearch}${encodeURIComponent(query)}`);
+        } else {
+            newTab();
+        }
+    </script>
+</body>
+</html>
