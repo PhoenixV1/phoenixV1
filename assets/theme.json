@@ -1,0 +1,324 @@
+{
+  "themes": [
+    {
+      "id": "ember",
+      "name": "Ember",
+      "primary": "#ff3c00",
+      "glow": "rgba(255, 60, 0, 0.6)",
+      "bg": "#0a0000",
+      "secondary": "#ff8c00"
+    },
+    {
+      "id": "ocean",
+      "name": "Ocean",
+      "primary": "#00d4ff",
+      "glow": "rgba(0, 212, 255, 0.6)",
+      "bg": "#000814",
+      "secondary": "#0077b6"
+    },
+    {
+      "id": "dunes",
+      "name": "Dunes",
+      "primary": "#ffb703",
+      "glow": "rgba(255, 183, 3, 0.6)",
+      "bg": "#141000",
+      "secondary": "#fb8500"
+    },
+    {
+      "id": "lavender",
+      "name": "Lavender",
+      "primary": "#9d4edd",
+      "glow": "rgba(157, 78, 221, 0.6)",
+      "bg": "#10002b",
+      "secondary": "#5a189a"
+    },
+    {
+      "id": "forest",
+      "name": "Forest",
+      "primary": "#2dc653",
+      "glow": "rgba(45, 198, 83, 0.6)",
+      "bg": "#001a00",
+      "secondary": "#1b4332"
+    },
+    {
+      "id": "christmas",
+      "name": "Christmas",
+      "primary": "#d90429",
+      "glow": "rgba(217, 4, 41, 0.6)",
+      "bg": "#01160c",
+      "secondary": "#2b9348"
+    },
+    {
+      "id": "halloween",
+      "name": "Halloween",
+      "primary": "#ff6d00",
+      "glow": "rgba(255, 109, 0, 0.6)",
+      "bg": "#0f001a",
+      "secondary": "#7b2cbf"
+    },
+    {
+      "id": "thanksgiving",
+      "name": "Thanksgiving",
+      "primary": "#bc4749",
+      "glow": "rgba(188, 71, 73, 0.6)",
+      "bg": "#1a0f00",
+      "secondary": "#a7c957"
+    },
+    {
+      "id": "cyber",
+      "name": "Cyber",
+      "primary": "#f72585",
+      "glow": "rgba(247, 37, 133, 0.6)",
+      "bg": "#03045e",
+      "secondary": "#4cc9f0"
+    },
+    {
+      "id": "midnight",
+      "name": "Midnight",
+      "primary": "#48cae4",
+      "glow": "rgba(72, 202, 228, 0.6)",
+      "bg": "#000000",
+      "secondary": "#023e8a"
+    },
+    {
+      "id": "nebula",
+      "name": "Nebula",
+      "primary": "#ff00ff",
+      "glow": "rgba(255, 0, 255, 0.6)",
+      "bg": "#0d001a",
+      "secondary": "#7000ff"
+    },
+    {
+      "id": "glacier",
+      "name": "Glacier",
+      "primary": "#f0f8ff",
+      "glow": "rgba(240, 248, 255, 0.6)",
+      "bg": "#001219",
+      "secondary": "#005f73"
+    },
+    {
+      "id": "magma",
+      "name": "Magma",
+      "primary": "#ff4d00",
+      "glow": "rgba(255, 77, 0, 0.6)",
+      "bg": "#0a0500",
+      "secondary": "#900c3f"
+    },
+    {
+      "id": "solar",
+      "name": "Solar",
+      "primary": "#ffd700",
+      "glow": "rgba(255, 215, 0, 0.6)",
+      "bg": "#1a0a00",
+      "secondary": "#ff8c00"
+    },
+    {
+      "id": "toxic",
+      "name": "Toxic",
+      "primary": "#39ff14",
+      "glow": "rgba(57, 255, 20, 0.6)",
+      "bg": "#050a00",
+      "secondary": "#76ff03"
+    },
+    {
+      "id": "abyss",
+      "name": "Abyss",
+      "primary": "#00ffff",
+      "glow": "rgba(0, 255, 255, 0.4)",
+      "bg": "#000005",
+      "secondary": "#000080"
+    },
+    {
+      "id": "sakura",
+      "name": "Sakura",
+      "primary": "#ffb7c5",
+      "glow": "rgba(255, 183, 197, 0.6)",
+      "bg": "#1a0a0d",
+      "secondary": "#ff69b4"
+    },
+    {
+      "id": "royal",
+      "name": "Royal",
+      "primary": "#d4af37",
+      "glow": "rgba(212, 175, 55, 0.6)",
+      "bg": "#0a001a",
+      "secondary": "#800080"
+    },
+    {
+      "id": "storm",
+      "name": "Storm",
+      "primary": "#a8dadc",
+      "glow": "rgba(168, 218, 220, 0.6)",
+      "bg": "#1d3557",
+      "secondary": "#457b9d"
+    },
+    {
+      "id": "void",
+      "name": "Void",
+      "primary": "#ffffff",
+      "glow": "rgba(255, 255, 255, 0.4)",
+      "bg": "#000000",
+      "secondary": "#333333"
+    },
+    {
+      "id": "aurora",
+      "name": "Aurora",
+      "primary": "#00ffcc",
+      "glow": "rgba(0, 255, 204, 0.6)",
+      "bg": "#000d0a",
+      "secondary": "#7000ff"
+    },
+    {
+      "id": "sunset",
+      "name": "Sunset",
+      "primary": "#ff4e00",
+      "glow": "rgba(255, 78, 0, 0.6)",
+      "bg": "#1a001a",
+      "secondary": "#8800ff"
+    },
+    {
+      "id": "monochrome",
+      "name": "Monochrome",
+      "primary": "#ffffff",
+      "glow": "rgba(255, 255, 255, 0.3)",
+      "bg": "#000000",
+      "secondary": "#333333"
+    },
+    {
+      "id": "peach",
+      "name": "Peach",
+      "primary": "#ff9a8b",
+      "glow": "rgba(255, 154, 139, 0.6)",
+      "bg": "#1a0a05",
+      "secondary": "#ff6a88"
+    },
+    {
+      "id": "emerald",
+      "name": "Emerald",
+      "primary": "#50fa7b",
+      "glow": "rgba(80, 250, 123, 0.6)",
+      "bg": "#0a1a0d",
+      "secondary": "#282a36"
+    },
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "primary": "#ff5555",
+      "glow": "rgba(255, 85, 85, 0.6)",
+      "bg": "#1a0505",
+      "secondary": "#44475a"
+    },
+    {
+      "id": "sapphire",
+      "name": "Sapphire",
+      "primary": "#8be9fd",
+      "glow": "rgba(139, 233, 253, 0.6)",
+      "bg": "#0a0d1a",
+      "secondary": "#6272a4"
+    },
+    {
+      "id": "quartz",
+      "name": "Quartz",
+      "primary": "#ff79c6",
+      "glow": "rgba(255, 121, 198, 0.6)",
+      "bg": "#1a0a15",
+      "secondary": "#bd93f9"
+    },
+    {
+      "id": "onyx",
+      "name": "Onyx",
+      "primary": "#44475a",
+      "glow": "rgba(68, 71, 90, 0.6)",
+      "bg": "#000000",
+      "secondary": "#282a36"
+    },
+    {
+      "id": "titan",
+      "name": "Titan",
+      "primary": "#f8f8f2",
+      "glow": "rgba(248, 248, 242, 0.6)",
+      "bg": "#1a1a1a",
+      "secondary": "#6272a4"
+    },
+    {
+      "id": "moss",
+      "name": "Moss",
+      "primary": "#8fb339",
+      "glow": "rgba(143, 179, 57, 0.6)",
+      "bg": "#0d1a00",
+      "secondary": "#4b5320"
+    },
+    {
+      "id": "sky",
+      "name": "Sky",
+      "primary": "#caf0f8",
+      "glow": "rgba(202, 240, 248, 0.6)",
+      "bg": "#001d3d",
+      "secondary": "#48cae4"
+    },
+    {
+      "id": "desert",
+      "name": "Desert",
+      "primary": "#e9c46a",
+      "glow": "rgba(233, 196, 106, 0.6)",
+      "bg": "#264653",
+      "secondary": "#f4a261"
+    },
+    {
+      "id": "tundra",
+      "name": "Tundra",
+      "primary": "#fefcfb",
+      "glow": "rgba(254, 252, 251, 0.5)",
+      "bg": "#1282a2",
+      "secondary": "#001f54"
+    },
+    {
+      "id": "autumn",
+      "name": "Autumn",
+      "primary": "#e76f51",
+      "glow": "rgba(231, 111, 81, 0.6)",
+      "bg": "#2a1b18",
+      "secondary": "#f4a261"
+    },
+    {
+      "id": "jungle",
+      "name": "Jungle",
+      "primary": "#007f5f",
+      "glow": "rgba(0, 127, 95, 0.6)",
+      "bg": "#101a0a",
+      "secondary": "#55a630"
+    },
+    {
+      "id": "cave",
+      "name": "Cave",
+      "primary": "#9a8c98",
+      "glow": "rgba(154, 140, 152, 0.5)",
+      "bg": "#22223b",
+      "secondary": "#4a4e69"
+    },
+    {
+      "id": "reef",
+      "name": "Reef",
+      "primary": "#ff9f1c",
+      "glow": "rgba(255, 159, 28, 0.6)",
+      "bg": "#2ec4b6",
+      "secondary": "#fdfffc"
+    },
+    {
+      "id": "meadow",
+      "name": "Meadow",
+      "primary": "#ccd5ae",
+      "glow": "rgba(204, 213, 174, 0.6)",
+      "bg": "#1a1a1a",
+      "secondary": "#e9edc9"
+    },
+    {
+      "id": "peak",
+      "name": "Peak",
+      "primary": "#edf2f4",
+      "glow": "rgba(237, 242, 244, 0.5)",
+      "bg": "#2b2d42",
+      "secondary": "#8d99ae"
+    }
+  ]
+}
