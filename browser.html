@@ -12,21 +12,29 @@
     <script src="/scramject/scramject.bundle.js" onerror="window.sjLoaded=false" onload="window.sjLoaded=true" defer></script>
 
     <style>
+        :root {
+            --primary: #ff3c00;
+            --primary-glow: rgba(255, 60, 0, 0.6);
+            --bg-core: #0d0202;
+            --secondary: #ff8c00;
+        }
+
         body {
             margin: 0; padding: 0;
             font-family: 'Outfit', sans-serif;
-            background: #0d0202;
+            background: var(--bg-core);
             color: #eee;
             height: 100vh;
             display: flex;
             overflow: hidden;
+            transition: background 0.5s ease;
         }
 
         .sidebar {
             width: 240px;
             min-width: 240px;
             background: rgba(10, 0, 0, 0.98);
-            border-right: 1px solid #ff3c0033;
+            border-right: 1px solid var(--primary-glow);
             display: flex;
             flex-direction: column;
             padding: 1rem;
@@ -57,14 +65,14 @@
         }
 
         .tab-item:hover {
-            background: rgba(255, 60, 0, 0.08);
+            background: var(--primary-glow);
             color: #bbb;
         }
 
         .tab-item.active {
-            background: rgba(255, 60, 0, 0.15);
-            color: #ff3c00;
-            border: 1px solid rgba(255, 60, 0, 0.3);
+            background: var(--primary-glow);
+            color: var(--primary);
+            border: 1px solid var(--primary-glow);
             font-weight: 700;
         }
 
@@ -86,7 +94,7 @@
             top: 24px;
             left: -12px;
             z-index: 100;
-            background: #ff3c00;
+            background: var(--primary);
             color: #000;
             width: 24px;
             height: 52px;
@@ -96,7 +104,7 @@
             justify-content: center;
             cursor: pointer;
             transition: left 0.3s;
-            box-shadow: 0 0 20px rgba(255, 60, 0, 0.5);
+            box-shadow: 0 0 20px var(--primary-glow);
         }
         
         .sidebar.collapsed + .main-view .sidebar-toggle {
@@ -106,7 +114,7 @@
         .toolbar {
             height: 64px;
             background: #0a0000;
-            border-bottom: 1px solid #ff3c0022;
+            border-bottom: 1px solid var(--primary-glow);
             display: flex;
             align-items: center;
             padding: 0 1.5rem;
@@ -122,8 +130,8 @@
             align-items: center;
             padding: 0 1.5rem;
             font-size: 0.95rem;
-            color: #ff3c00;
-            border: 1px solid #ff3c0022;
+            color: var(--primary);
+            border: 1px solid var(--primary-glow);
         }
 
         .address-bar input {
@@ -156,7 +164,7 @@
         }
 
         .new-tab-btn {
-            background: #ff3c00;
+            background: var(--primary);
             color: #000;
             border-radius: 16px;
             padding: 0.85rem 1rem;
@@ -169,14 +177,14 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-size: 0.85rem;
-            box-shadow: 0 4px 15px rgba(255, 60, 0, 0.3);
+            box-shadow: 0 4px 15px var(--primary-glow);
             margin-top: 1rem;
         }
 
         .new-tab-btn:hover {
             transform: translateY(-2px);
             background: #fff;
-            box-shadow: 0 6px 20px rgba(255, 60, 0, 0.5);
+            box-shadow: 0 6px 20px var(--primary-glow);
         }
 
         #dependency-warning {
@@ -204,11 +212,11 @@
 
     <div id="sidebar" class="sidebar">
         <div class="flex items-center gap-3 mb-10 px-2">
-            <a href="index.html" class="w-12 h-12 rounded-2xl bg-red-600/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:scale-110 transition-transform">
+            <a href="index.html" class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-current hover:scale-110 transition-transform" style="color: var(--primary)">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             </a>
-            <span class="text-[14px] font-black uppercase tracking-[0.2em] text-red-600">Phoenix Web</span>
-            <div onclick="toggleSidebar()" class="ml-auto cursor-pointer text-red-950 hover:text-red-500">
+            <span class="text-[14px] font-black uppercase tracking-[0.2em]" style="color: var(--primary)">Phoenix Web</span>
+            <div onclick="toggleSidebar()" class="ml-auto cursor-pointer opacity-30 hover:opacity-100 transition-opacity">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M4 6h16M4 12h16M4 18h7"/></svg>
             </div>
         </div>
@@ -216,7 +224,7 @@
         <div id="tab-list" class="space-y-1 overflow-y-auto flex-1 pr-1 custom-scrollbar">
         </div>
         
-        <div class="mt-auto pt-4 border-t border-red-900/10">
+        <div class="mt-auto pt-4 border-t border-white/5">
             <div class="new-tab-btn" onclick="newTab()">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M12 4v16m8-8H4"/></svg>
                 <span>New Nexus Tab</span>
@@ -229,10 +237,10 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="4" d="M9 5l7 7-7 7"/></svg>
         </div>
         <div class="toolbar">
-            <div class="flex gap-8 text-red-950">
-                <svg onclick="goBack()" class="w-6 h-6 hover:text-red-500 cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
-                <svg onclick="goForward()" class="w-6 h-6 hover:text-red-500 cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 5l7 7-7 7"/></svg>
-                <svg onclick="reload()" class="w-6 h-6 hover:text-red-500 cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <div class="flex gap-8 opacity-30">
+                <svg onclick="goBack()" class="w-6 h-6 hover:text-white cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                <svg onclick="goForward()" class="w-6 h-6 hover:text-white cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                <svg onclick="reload()" class="w-6 h-6 hover:text-white cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             </div>
             <div class="address-bar">
                 <input type="text" id="url-input" value="" spellcheck="false" placeholder="Ignite a search or URL...">
@@ -242,6 +250,27 @@
     </div>
 
     <script>
+        function setCSSVars(theme) {
+            document.documentElement.style.setProperty('--primary', theme.primary);
+            document.documentElement.style.setProperty('--primary-glow', theme.glow);
+            document.documentElement.style.setProperty('--bg-core', theme.bg);
+            document.documentElement.style.setProperty('--secondary', theme.secondary || theme.primary);
+        }
+
+        async function applyTheme() {
+            const activeThemeId = localStorage.getItem('phoenix-theme') || 'ember';
+            try {
+                const r = await fetch('assets/themes/theme.json');
+                if (!r.ok) throw new Error();
+                const data = await r.json();
+                const theme = data.themes.find(t => t.id === activeThemeId) || data.themes[0];
+                setCSSVars(theme);
+            } catch (e) {
+                setCSSVars({ primary: '#ff3c00', glow: 'rgba(255, 60, 0, 0.6)', bg: '#0d0202', secondary: '#ff8c00' });
+            }
+        }
+        applyTheme();
+
         const iframe = document.getElementById('browser-iframe');
         const urlInput = document.getElementById('url-input');
         const tabList = document.getElementById('tab-list');
@@ -273,10 +302,10 @@
                 tabEl.onclick = () => switchTab(tab.id);
                 tabEl.innerHTML = `
                     <div class="flex items-center gap-3 overflow-hidden">
-                        <div class="w-2.5 h-2.5 rounded-full flex-shrink-0 ${tab.id === activeTabId ? 'bg-red-500 shadow-[0_0_10px_#ff3c00]' : 'bg-red-950'}"></div>
+                        <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background: ${tab.id === activeTabId ? 'var(--primary)' : 'rgba(255,255,255,0.1)'}; box-shadow: ${tab.id === activeTabId ? '0 0 10px var(--primary-glow)' : 'none'}"></div>
                         <span class="truncate max-w-[130px]">${tab.title}</span>
                     </div>
-                    ${tabs.length > 1 ? `<svg class="tab-close w-5 h-5 p-1 rounded-full hover:bg-red-600/20" onclick="closeTab(event, ${tab.id})" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>` : ''}
+                    ${tabs.length > 1 ? `<svg class="tab-close w-5 h-5 p-1 rounded-full hover:bg-white/10" onclick="closeTab(event, ${tab.id})" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>` : ''}
                 `;
                 tabList.appendChild(tabEl);
             });
