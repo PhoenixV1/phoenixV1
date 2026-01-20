@@ -11,7 +11,7 @@
     <script src="/uv/uv.config.js" defer></script>
     <script src="/scramject/scramject.bundle.js" onerror="window.sjLoaded=false" onload="window.sjLoaded=true" defer></script>
     
-    <!-- BareMux and Libcurl Core -->
+    
     <script src="bm/index.js" defer></script>
     <script src="lc/index.js" defer></script>
 
@@ -291,15 +291,9 @@
 
         function checkDependencies() {
             const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
-            const isUv = settings.engine === 'uv';
-            const isLoaded = isUv ? window.uvLoaded : window.sjLoaded;
-
-            if (isLoaded === false) {
-                warning.style.display = 'block';
-                return false;
-            }
-            warning.style.display = 'none';
-            return true;
+            const isLoaded = settings.engine === 'uv' ? window.uvLoaded : window.sjLoaded;
+            warning.style.display = isLoaded === false ? 'block' : 'none';
+            return isLoaded;
         }
 
         function renderTabs() {
@@ -325,11 +319,6 @@
             
             if (tab.url.startsWith('http') && !tab.url.includes(location.host)) {
                const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv', transport: 'none' };
-               
-               // Logic to apply BareMux/Libcurl if active
-               if (settings.transport === 'bm' && window.BareMux) {
-                   // Placeholder for BareMux initialization if needed
-               }
                
                if (settings.engine === 'uv' && window.uvLoaded) {
                    iframe.src = __uv$config.prefix + __uv$config.encodeUrl(tab.url);
