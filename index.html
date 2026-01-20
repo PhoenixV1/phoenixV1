@@ -7,10 +7,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #ff3c00;
+            --primary-glow: rgba(255, 60, 0, 0.6);
+            --bg-core: #0a0000;
+            --secondary: #ff8c00;
+        }
+
         body {
             margin: 0; padding: 0;
             font-family: 'Outfit', sans-serif;
-            background: #0a0000;
+            background: var(--bg-core);
             color: #fff;
             height: 100vh;
             overflow: hidden;
@@ -19,6 +26,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            transition: background 0.5s ease;
         }
 
         body::before {
@@ -26,11 +34,12 @@
             position: absolute;
             inset: 0;
             background: 
-                radial-gradient(circle at 50% 120%, #ff1100 0%, transparent 60%),
-                radial-gradient(circle at 15% 15%, #4a0000 0%, transparent 35%),
-                radial-gradient(circle at 85% 15%, #4a0000 0%, transparent 35%);
+                radial-gradient(circle at 50% 120%, var(--primary) 0%, transparent 60%),
+                radial-gradient(circle at 15% 15%, var(--secondary) 0%, transparent 35%),
+                radial-gradient(circle at 85% 15%, var(--secondary) 0%, transparent 35%);
             z-index: 1;
             pointer-events: none;
+            opacity: 0.4;
         }
 
         .brand {
@@ -43,18 +52,18 @@
         .brand h1 {
             font-size: 7rem;
             font-weight: 800;
-            color: #ff3c00;
+            color: var(--primary);
             letter-spacing: -0.07em;
             margin: 0;
             line-height: 0.8;
             text-transform: lowercase;
-            filter: drop-shadow(0 0 50px rgba(255, 60, 0, 0.8));
+            filter: drop-shadow(0 0 50px var(--primary-glow));
             animation: phoenixPulse 4s infinite ease-in-out;
         }
 
         @keyframes phoenixPulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 40px rgba(255, 60, 0, 0.6)); }
-            50% { transform: scale(1.03); filter: drop-shadow(0 0 80px rgba(255, 60, 0, 1)); }
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 40px var(--primary-glow)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 80px var(--primary-glow)); }
         }
 
         .brand p {
@@ -62,7 +71,7 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.8em;
-            color: #ff3c00;
+            color: var(--primary);
             opacity: 0.9;
             margin-top: 10px;
         }
@@ -80,18 +89,18 @@
         .search-box {
             width: 100%;
             background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #ff3c00;
+            border: 2px solid var(--primary);
             border-radius: 20px;
             display: flex;
             align-items: center;
             padding: 0.8rem 1.8rem;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 0 40px rgba(255, 60, 0, 0.2);
+            box-shadow: 0 0 40px rgba(0,0,0,0.4);
         }
 
         .search-box:focus-within {
             transform: scale(1.03);
-            box-shadow: 0 0 60px rgba(255, 60, 0, 0.4);
+            box-shadow: 0 0 60px var(--primary-glow);
             background: #000;
         }
 
@@ -107,13 +116,13 @@
         }
 
         .search-box input::placeholder {
-            color: #330000;
+            color: #333;
         }
 
         .online-status {
             font-size: 10px;
             font-weight: 900;
-            color: #ff3c00;
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 0.4em;
             opacity: 0.4;
@@ -138,9 +147,21 @@
         .nav-accent-line {
             width: 0%;
             height: 3px;
-            background: #ff3c00;
+            background: var(--primary);
             transition: width 0.8s ease;
-            box-shadow: 0 0 20px #ff3c00;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .nav-icon-container {
+            border-color: rgba(255,255,255,0.1);
+        }
+        .nav-link:hover .nav-icon-container {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+        .nav-link:hover span {
+            color: var(--primary);
         }
     </style>
 </head>
@@ -154,7 +175,7 @@
 
     <div class="search-area">
         <div class="search-box">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-6 h-6" style="color: var(--primary)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
             <input type="text" id="mainSearch" placeholder="ignite search..." autocomplete="off">
@@ -168,28 +189,28 @@
         <div class="flex flex-col items-center w-full max-w-3xl mx-auto px-10">
             <div class="relative w-full flex justify-between items-center px-12 mb-6">
                 <a href="games.html" class="nav-link flex flex-col items-center gap-2 group">
-                    <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-black border border-red-600/40 hover:bg-red-600 hover:text-black transition-all">
+                    <div class="nav-icon-container w-16 h-16 flex items-center justify-center rounded-2xl bg-black border transition-all">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
                     </div>
-                    <span class="text-[10px] font-black uppercase tracking-[0.3em] group-hover:text-red-500">Games</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] transition-colors">Games</span>
                 </a>
                 <a href="apps.html" class="nav-link flex flex-col items-center gap-2 group">
-                    <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-black border border-red-600/40 hover:bg-red-600 hover:text-black transition-all">
+                    <div class="nav-icon-container w-16 h-16 flex items-center justify-center rounded-2xl bg-black border transition-all">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                     </div>
-                    <span class="text-[10px] font-black uppercase tracking-[0.3em] group-hover:text-red-500">Apps</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] transition-colors">Apps</span>
                 </a>
                 <a href="browser.html" class="nav-link flex flex-col items-center gap-2 group">
-                    <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-black border border-red-600/40 hover:bg-red-600 hover:text-black transition-all">
+                    <div class="nav-icon-container w-16 h-16 flex items-center justify-center rounded-2xl bg-black border transition-all">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
                     </div>
-                    <span class="text-[10px] font-black uppercase tracking-[0.3em] group-hover:text-red-500">Browser</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] transition-colors">Browser</span>
                 </a>
                 <a href="settings.html" class="nav-link flex flex-col items-center gap-2 group">
-                    <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-black border border-red-600/40 hover:bg-red-600 hover:text-black transition-all">
+                    <div class="nav-icon-container w-16 h-16 flex items-center justify-center rounded-2xl bg-black border transition-all">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </div>
-                    <span class="text-[10px] font-black uppercase tracking-[0.3em] group-hover:text-red-500">Settings</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.3em] transition-colors">Settings</span>
                 </a>
             </div>
             <div class="nav-accent-line"></div>
@@ -197,6 +218,73 @@
     </div>
 
     <script>
+        const fallbackThemes = {
+            "themes": [
+                { "id": "ember", "name": "Ember", "primary": "#ff3c00", "glow": "rgba(255, 60, 0, 0.6)", "bg": "#0a0000", "secondary": "#ff8c00" },
+                { "id": "ocean", "name": "Ocean", "primary": "#00d4ff", "glow": "rgba(0, 212, 255, 0.6)", "bg": "#000814", "secondary": "#0077b6" },
+                { "id": "dunes", "name": "Dunes", "primary": "#ffb703", "glow": "rgba(255, 183, 3, 0.6)", "bg": "#141000", "secondary": "#fb8500" },
+                { "id": "lavender", "name": "Lavender", "primary": "#9d4edd", "glow": "rgba(157, 78, 221, 0.6)", "bg": "#10002b", "secondary": "#5a189a" },
+                { "id": "forest", "name": "Forest", "primary": "#2dc653", "glow": "rgba(45, 198, 83, 0.6)", "bg": "#001a00", "secondary": "#1b4332" },
+                { "id": "christmas", "name": "Christmas", "primary": "#d90429", "glow": "rgba(217, 4, 41, 0.6)", "bg": "#01160c", "secondary": "#2b9348" },
+                { "id": "halloween", "name": "Halloween", "primary": "#ff6d00", "glow": "rgba(255, 109, 0, 0.6)", "bg": "#0f001a", "secondary": "#7b2cbf" },
+                { "id": "thanksgiving", "name": "Thanksgiving", "primary": "#bc4749", "glow": "rgba(188, 71, 73, 0.6)", "bg": "#1a0f00", "secondary": "#a7c957" },
+                { "id": "cyber", "name": "Cyber", "primary": "#f72585", "glow": "rgba(247, 37, 133, 0.6)", "bg": "#03045e", "secondary": "#4cc9f0" },
+                { "id": "midnight", "name": "Midnight", "primary": "#48cae4", "glow": "rgba(72, 202, 228, 0.6)", "bg": "#000000", "secondary": "#023e8a" },
+                { "id": "nebula", "name": "Nebula", "primary": "#ff00ff", "glow": "rgba(255, 0, 255, 0.6)", "bg": "#0d001a", "secondary": "#7000ff" },
+                { "id": "glacier", "name": "Glacier", "primary": "#f0f8ff", "glow": "rgba(240, 248, 255, 0.6)", "bg": "#001219", "secondary": "#005f73" },
+                { "id": "magma", "name": "Magma", "primary": "#ff4d00", "glow": "rgba(255, 77, 0, 0.6)", "bg": "#0a0500", "secondary": "#900c3f" },
+                { "id": "solar", "name": "Solar", "primary": "#ffd700", "glow": "rgba(255, 215, 0, 0.6)", "bg": "#1a0a00", "secondary": "#ff8c00" },
+                { "id": "toxic", "name": "Toxic", "primary": "#39ff14", "glow": "rgba(57, 255, 20, 0.6)", "bg": "#050a00", "secondary": "#76ff03" },
+                { "id": "abyss", "name": "Abyss", "primary": "#00ffff", "glow": "rgba(0, 255, 255, 0.4)", "bg": "#000005", "secondary": "#000080" },
+                { "id": "sakura", "name": "Sakura", "primary": "#ffb7c5", "glow": "rgba(255, 183, 197, 0.6)", "bg": "#1a0a0d", "secondary": "#ff69b4" },
+                { "id": "royal", "name": "Royal", "primary": "#d4af37", "glow": "rgba(212, 175, 55, 0.6)", "bg": "#0a001a", "secondary": "#800080" },
+                { "id": "storm", "name": "Storm", "primary": "#a8dadc", "glow": "rgba(168, 218, 220, 0.6)", "bg": "#1d3557", "secondary": "#457b9d" },
+                { "id": "void", "name": "Void", "primary": "#ffffff", "glow": "rgba(255, 255, 255, 0.4)", "bg": "#000000", "secondary": "#333333" },
+                { "id": "aurora", "name": "Aurora", "primary": "#00ffcc", "glow": "rgba(0, 255, 204, 0.6)", "bg": "#000d0a", "secondary": "#7000ff" },
+                { "id": "sunset", "name": "Sunset", "primary": "#ff4e00", "glow": "rgba(255, 78, 0, 0.6)", "bg": "#1a001a", "secondary": "#8800ff" },
+                { "id": "monochrome", "name": "Monochrome", "primary": "#ffffff", "glow": "rgba(255, 255, 255, 0.3)", "bg": "#000000", "secondary": "#333333" },
+                { "id": "peach", "name": "Peach", "primary": "#ff9a8b", "glow": "rgba(255, 154, 139, 0.6)", "bg": "#1a0a05", "secondary": "#ff6a88" },
+                { "id": "emerald", "name": "Emerald", "primary": "#50fa7b", "glow": "rgba(80, 250, 123, 0.6)", "bg": "#0a1a0d", "secondary": "#282a36" },
+                { "id": "ruby", "name": "Ruby", "primary": "#ff5555", "glow": "rgba(255, 85, 85, 0.6)", "bg": "#1a0505", "secondary": "#44475a" },
+                { "id": "sapphire", "name": "Sapphire", "primary": "#8be9fd", "glow": "rgba(139, 233, 253, 0.6)", "bg": "#0a0d1a", "secondary": "#6272a4" },
+                { "id": "quartz", "name": "Quartz", "primary": "#ff79c6", "glow": "rgba(255, 121, 198, 0.6)", "bg": "#1a0a15", "secondary": "#bd93f9" },
+                { "id": "onyx", "name": "Onyx", "primary": "#44475a", "glow": "rgba(68, 71, 90, 0.6)", "bg": "#000000", "secondary": "#282a36" },
+                { "id": "titan", "name": "Titan", "primary": "#f8f8f2", "glow": "rgba(248, 248, 242, 0.6)", "bg": "#1a1a1a", "secondary": "#6272a4" },
+                { "id": "moss", "name": "Moss", "primary": "#8fb339", "glow": "rgba(143, 179, 57, 0.6)", "bg": "#0d1a00", "secondary": "#4b5320" },
+                { "id": "sky", "name": "Sky", "primary": "#caf0f8", "glow": "rgba(202, 240, 248, 0.6)", "bg": "#001d3d", "secondary": "#48cae4" },
+                { "id": "desert", "name": "Desert", "primary": "#e9c46a", "glow": "rgba(233, 196, 106, 0.6)", "bg": "#264653", "secondary": "#f4a261" },
+                { "id": "tundra", "name": "Tundra", "primary": "#fefcfb", "glow": "rgba(254, 252, 251, 0.5)", "bg": "#1282a2", "secondary": "#001f54" },
+                { "id": "autumn", "name": "Autumn", "primary": "#e76f51", "glow": "rgba(231, 111, 81, 0.6)", "bg": "#2a1b18", "secondary": "#f4a261" },
+                { "id": "jungle", "name": "Jungle", "primary": "#007f5f", "glow": "rgba(0, 127, 95, 0.6)", "bg": "#101a0a", "secondary": "#55a630" },
+                { "id": "cave", "name": "Cave", "primary": "#9a8c98", "glow": "rgba(154, 140, 152, 0.5)", "bg": "#22223b", "secondary": "#4a4e69" },
+                { "id": "reef", "name": "Reef", "primary": "#ff9f1c", "glow": "rgba(255, 159, 28, 0.6)", "bg": "#2ec4b6", "secondary": "#fdfffc" },
+                { "id": "meadow", "name": "Meadow", "primary": "#ccd5ae", "glow": "rgba(204, 213, 174, 0.6)", "bg": "#1a1a1a", "secondary": "#e9edc9" },
+                { "id": "peak", "name": "Peak", "primary": "#edf2f4", "glow": "rgba(237, 242, 244, 0.5)", "bg": "#2b2d42", "secondary": "#8d99ae" }
+            ]
+        };
+
+        function setCSSVars(theme) {
+            document.documentElement.style.setProperty('--primary', theme.primary);
+            document.documentElement.style.setProperty('--primary-glow', theme.glow);
+            document.documentElement.style.setProperty('--bg-core', theme.bg);
+            document.documentElement.style.setProperty('--secondary', theme.secondary);
+        }
+
+        async function applyTheme() {
+            const activeThemeId = localStorage.getItem('phoenix-theme') || 'ember';
+            try {
+                const r = await fetch('assets/themes/theme.json');
+                if (!r.ok) throw new Error();
+                const data = await r.json();
+                const theme = data.themes.find(t => t.id === activeThemeId) || data.themes[0];
+                setCSSVars(theme);
+            } catch (e) {
+                const theme = fallbackThemes.themes.find(t => t.id === activeThemeId) || fallbackThemes.themes[0];
+                setCSSVars(theme);
+            }
+        }
+        applyTheme();
+
         const navbar = document.getElementById('navbar-hud');
         const phoenixSound = document.getElementById('phoenixSound');
         const mainSearch = document.getElementById('mainSearch');
