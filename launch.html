@@ -7,39 +7,47 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #ff3c00;
+            --primary-glow: rgba(255, 60, 0, 0.9);
+            --bg-core: #000;
+            --secondary: #ff8c00;
+        }
+
         body {
             margin: 0; padding: 0;
             font-family: 'Outfit', sans-serif;
-            background: #000;
+            background: var(--bg-core);
             color: #fff;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            transition: background 0.5s ease;
         }
 
         body::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, #330000 0%, transparent 80%);
-            opacity: 0.6;
+            background: radial-gradient(circle at center, var(--primary) 0%, transparent 80%);
+            opacity: 0.15;
             z-index: 1;
         }
 
         .phoenix-glow {
-            filter: drop-shadow(0 0 40px rgba(255, 60, 0, 0.9));
+            filter: drop-shadow(0 0 40px var(--primary-glow));
             animation: breathe 3s ease-in-out infinite;
         }
 
         @keyframes breathe {
             0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 60px rgba(255, 60, 0, 1)); }
+            50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 60px var(--primary-glow)); }
         }
 
         .btn-ignite {
-            background: linear-gradient(135deg, #ff3c00, #ff8c00);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: #000;
             padding: 1.2rem 4rem;
             border-radius: 1rem;
@@ -47,7 +55,7 @@
             letter-spacing: 0.5em;
             text-transform: uppercase;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 0 40px rgba(255, 60, 0, 0.4);
+            box-shadow: 0 0 40px var(--primary-glow);
             position: relative;
             z-index: 10;
             border: none;
@@ -56,7 +64,7 @@
 
         .btn-ignite:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 70px rgba(255, 60, 0, 0.9);
+            box-shadow: 0 0 70px var(--primary-glow);
             background: #fff;
         }
 
@@ -79,18 +87,43 @@
             <svg class="phoenix-glow w-48 h-48 mx-auto" viewBox="0 0 24 24">
                 <defs>
                     <linearGradient id="phoenixGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#ff3c00;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#ffaa00;stop-opacity:1" />
+                        <stop id="grad-stop-1" offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+                        <stop id="grad-stop-2" offset="100%" style="stop-color:var(--secondary);stop-opacity:1" />
                     </linearGradient>
                 </defs>
                 <path class="phoenix-icon" d="M8.5,20C12.1,20 15,17.1 15,13.5C15,12.2 14.6,11.1 14,10.1C14.7,11.3 15.5,12.7 15.5,14C15.5,15.1 15.1,16.1 14.4,16.8C15.2,16 15.7,14.8 15.7,13.5C15.7,11 13.7,9 11.2,9C9.7,9 8.4,9.7 7.6,10.8C8.2,9.8 8.8,8.4 8.8,7C8.8,4.1 6.8,1.6 4.2,1.1C6.2,2.8 7.5,5.3 7.5,8.2C7.5,10.3 6.3,12.1 4.5,13C6.4,12.8 8.1,13.4 9.1,14.4C10.2,15.4 10.7,16.8 10.7,18.3C10.7,19.2 10.5,20.1 10.1,20.8C12.3,19.6 13.8,17.2 13.8,14.5C13.8,11.7 12,9.3 9.5,8.2C11.5,9.5 12.8,11.8 12.8,14.5C12.8,17.5 10.9,20 8.5,20Z"/>
             </svg>
         </div>
         <h1 class="text-7xl font-black italic tracking-tighter text-white mb-4 uppercase">Phoenix</h1>
-        <p class="text-red-600 font-bold tracking-[0.8em] text-xs uppercase mb-20 opacity-70">Core Initialization v1.0</p>
+        <p id="status-line" class="font-bold tracking-[0.8em] text-xs uppercase mb-20 opacity-70" style="color: var(--primary)">Core Initialization v1.0</p>
         <button onclick="ignite()" class="btn-ignite">Ignite</button>
     </div>
     <script>
+        function setCSSVars(theme) {
+            document.documentElement.style.setProperty('--primary', theme.primary);
+            document.documentElement.style.setProperty('--primary-glow', theme.glow);
+            document.documentElement.style.setProperty('--bg-core', theme.bg);
+            document.documentElement.style.setProperty('--secondary', theme.secondary || theme.primary);
+        }
+
+        async function applyTheme() {
+            const activeThemeId = localStorage.getItem('phoenix-theme') || 'ember';
+            try {
+                const r = await fetch('assets/themes/theme.json');
+                if (!r.ok) throw new Error();
+                const data = await r.json();
+                const theme = data.themes.find(t => t.id === activeThemeId) || data.themes[0];
+                setCSSVars(theme);
+            } catch (e) {
+                setCSSVars({ primary: '#ff3c00', glow: 'rgba(255, 60, 0, 0.9)', bg: '#000', secondary: '#ff8c00' });
+            }
+        }
+        applyTheme();
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'phoenix-theme') applyTheme();
+        });
+
         function ignite() {
             const sound = document.getElementById('phoenixSound');
             sound.play().catch(e => console.log('Audio blocked:', e));
