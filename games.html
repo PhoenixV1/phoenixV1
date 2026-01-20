@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phoenix V1 | Games</title>
+    <title>Phoenix Arcade | Ignition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -32,14 +32,14 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% -20%, var(--primary-glow) 0%, transparent 50%);
+            background: radial-gradient(circle at 50% -20%, var(--primary-glow) 0%, transparent 60%);
             z-index: 0;
             pointer-events: none;
             opacity: 0.2;
         }
 
         .phoenix-header {
-            padding: 2.5rem 4rem 1rem 4rem;
+            padding: 2rem 4rem 1rem 4rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -76,18 +76,17 @@
         }
 
         .game-shelf {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             overflow-y: auto;
             padding: 2rem 4rem;
             gap: 24px;
             flex: 1;
             z-index: 5;
-            justify-content: center;
         }
 
         .game-shelf::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
         .game-shelf::-webkit-scrollbar-thumb {
             background: var(--primary-glow);
@@ -95,10 +94,9 @@
         }
 
         .game-card {
-            width: 220px;
             aspect-ratio: 1/1;
             background: #0a0a0a;
-            border-radius: 24px;
+            border-radius: 20px;
             border: 2px solid rgba(255, 255, 255, 0.03);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
@@ -107,9 +105,9 @@
         }
 
         .game-card:hover {
-            transform: translateY(-10px) scale(1.05);
+            transform: translateY(-8px) scale(1.03);
             border-color: var(--primary);
-            box-shadow: 0 20px 60px var(--primary-glow);
+            box-shadow: 0 20px 40px var(--primary-glow);
             z-index: 10;
         }
 
@@ -118,10 +116,12 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.6s ease;
+            opacity: 0.8;
         }
 
         .game-card:hover img {
             transform: scale(1.1);
+            opacity: 1;
         }
 
         .game-title-overlay {
@@ -129,14 +129,16 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 2rem 1.5rem 1rem 1.5rem;
-            background: linear-gradient(to top, #000 0%, transparent 100%);
+            padding: 1.5rem 1rem 0.8rem 1rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
             font-weight: 800;
-            font-size: 1rem;
+            font-size: 0.85rem;
             color: #fff;
             opacity: 0;
             transform: translateY(10px);
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
         .game-card:hover .game-title-overlay {
@@ -154,67 +156,69 @@
 
         .search-bar {
             width: 100%;
-            max-width: 600px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 1rem 1.5rem;
+            max-width: 500px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 0.75rem 1.5rem;
             font-weight: 600;
             outline: none;
             color: #fff;
             transition: all 0.3s;
             text-align: center;
             letter-spacing: 0.1em;
+            font-size: 0.9rem;
         }
 
         .search-bar:focus {
             border-color: var(--primary);
-            background: #000;
-            box-shadow: 0 0 30px var(--primary-glow);
+            box-shadow: 0 0 20px var(--primary-glow);
         }
 
         .back-btn {
             position: absolute;
             top: 2rem;
             right: 2rem;
-            padding: 0.5rem 1.5rem;
-            border-radius: 99px;
+            padding: 0.4rem 1.2rem;
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.2em;
             transition: all 0.3s;
             color: var(--primary);
             z-index: 100;
-            background: #000;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
         }
 
         .back-btn:hover {
             background: var(--primary);
             color: #000;
             border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn">Return to Hub</a>
+    <a href="index.html" class="back-btn">Exit Arcade</a>
 
     <header class="phoenix-header">
         <div class="brand-section">
             <div class="brand-logo">
-                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8.5,20C12.1,20 15,17.1 15,13.5C15,12.2 14.6,11.1 14,10.1C14.7,11.3 15.5,12.7 15.5,14C15.5,15.1 15.1,16.1 14.4,16.8C15.2,16 15.7,14.8 15.7,13.5C15.7,11 13.7,9 11.2,9C9.7,9 8.4,9.7 7.6,10.8C8.2,9.8 8.8,8.4 8.8,7C8.8,4.1 6.8,1.6 4.2,1.1C6.2,2.8 7.5,5.3 7.5,8.2C7.5,10.3 6.3,12.1 4.5,13C6.4,12.8 8.1,13.4 9.1,14.4C10.2,15.4 10.7,16.8 10.7,18.3C10.7,19.2 10.5,20.1 10.1,20.8C12.3,19.6 13.8,17.2 13.8,14.5C13.8,11.7 12,9.3 9.5,8.2C11.5,9.5 12.8,11.8 12.8,14.5C12.8,17.5 10.9,20 8.5,20Z"/>
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C12 2 15 5 15 8C15 11 12 13 12 13C12 13 9 11 9 8C9 5 12 2 12 2ZM12 22C12 22 5 19 3 13C3 7 7 2 12 2C17 2 21 7 21 13C19 19 12 22 12 22Z"/>
                 </svg>
             </div>
             <div>
-                <h2 class="text-xl font-black uppercase tracking-widest text-white leading-none">Arcade</h2>
-                <p class="text-[9px] font-black uppercase tracking-[0.4em] mt-1" style="color: var(--primary)">Phoenix Gaming Cell</p>
+                <h2 class="text-lg font-black uppercase tracking-[0.2em] text-white leading-none">Arcade</h2>
+                <p class="text-[8px] font-black uppercase tracking-[0.4em] mt-1 opacity-50">Phoenix Cell 01</p>
             </div>
         </div>
         <div class="system-info">
             <div id="clock">00:00</div>
-            <div class="w-1.5 h-1.5 rounded-full animate-pulse" style="background: var(--primary)"></div>
+            <div class="w-2 h-2 rounded-full animate-pulse" style="background: var(--primary)"></div>
         </div>
     </header>
 
@@ -258,7 +262,9 @@
         const grid = document.getElementById('game-grid');
         const searchInput = document.getElementById('search-input');
 
-        function openGame(id) {
+        function openSoftware(id) {
+            // Launch through the internal Phoenix node executor (iframe.html)
+            // This ensures themes and the Alt+G overlay work correctly.
             window.location.href = `iframe.html?id=${id}`;
         }
 
@@ -275,7 +281,7 @@
                     <img src="${thumbUrl}" alt="${game.title}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=600&fit=crop'">
                     <div class="game-title-overlay">${game.title}</div>
                 `;
-                card.onclick = () => openGame(game.id);
+                card.onclick = () => openSoftware(game.id);
                 grid.appendChild(card);
             });
         }
