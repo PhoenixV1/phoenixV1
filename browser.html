@@ -10,6 +10,10 @@
     <script src="/uv/uv.bundle.js" onerror="window.uvLoaded=false" onload="window.uvLoaded=true" defer></script>
     <script src="/uv/uv.config.js" defer></script>
     <script src="/scramject/scramject.bundle.js" onerror="window.sjLoaded=false" onload="window.sjLoaded=true" defer></script>
+    
+    <!-- BareMux and Libcurl Core -->
+    <script src="bm/index.js" defer></script>
+    <script src="lc/index.js" defer></script>
 
     <style>
         :root {
@@ -227,7 +231,7 @@
         <div class="mt-auto pt-4 border-t border-white/5">
             <div class="new-tab-btn" onclick="newTab()">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M12 4v16m8-8H4"/></svg>
-                <span>New Nexus Tab</span>
+                <span>New Tab</span>
             </div>
         </div>
     </div>
@@ -270,6 +274,10 @@
             }
         }
         applyTheme();
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'phoenix-theme') applyTheme();
+        });
 
         const iframe = document.getElementById('browser-iframe');
         const urlInput = document.getElementById('url-input');
@@ -316,7 +324,13 @@
             const tab = tabs.find(t => t.id === id);
             
             if (tab.url.startsWith('http') && !tab.url.includes(location.host)) {
-               const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
+               const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv', transport: 'none' };
+               
+               // Logic to apply BareMux/Libcurl if active
+               if (settings.transport === 'bm' && window.BareMux) {
+                   // Placeholder for BareMux initialization if needed
+               }
+               
                if (settings.engine === 'uv' && window.uvLoaded) {
                    iframe.src = __uv$config.prefix + __uv$config.encodeUrl(tab.url);
                } else if (settings.engine === 'sj' && window.sjLoaded) {
