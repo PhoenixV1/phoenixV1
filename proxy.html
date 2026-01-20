@@ -12,20 +12,28 @@
     <script src="/scramject/scramject.bundle.js" onerror="window.sjLoaded=false" onload="window.sjLoaded=true" defer></script>
 
     <style>
+        :root {
+            --primary: #ff3c00;
+            --primary-glow: rgba(255, 60, 0, 0.6);
+            --bg-core: #0a0000;
+            --secondary: #ff8c00;
+        }
+
         body {
             margin: 0; padding: 0;
             font-family: 'Outfit', sans-serif;
-            background: #080806;
+            background: var(--bg-core);
             color: #eee;
             height: 100vh;
             display: flex;
             overflow: hidden;
+            transition: background 0.5s ease;
         }
 
         .sidebar {
             width: 220px;
-            background: #0d0d0c;
-            border-right: 1px solid #1a1a18;
+            background: rgba(10, 10, 10, 0.95);
+            border-right: 1px solid var(--primary-glow);
             display: flex;
             flex-direction: column;
             padding: 1rem;
@@ -36,53 +44,62 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.6rem 0.8rem;
-            border-radius: 10px;
-            font-size: 0.85rem;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
             font-weight: 500;
-            color: #444;
+            color: #555;
             cursor: pointer;
             transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .tab-item:hover {
+            background: var(--primary-glow);
+            color: #bbb;
         }
 
         .tab-item.active {
-            background: rgba(255, 60, 0, 0.1);
-            color: #ff3c00;
-            border: 1px solid rgba(255, 60, 0, 0.1);
+            background: var(--primary-glow);
+            color: var(--primary);
+            border: 1px solid var(--primary-glow);
+            font-weight: 700;
         }
 
         .main-view {
             flex: 1;
             display: flex;
             flex-direction: column;
-            margin: 10px;
+            margin: 12px;
             background: #000;
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
-            border: 1px solid #1a1a18;
+            border: 1px solid #1a0000;
             position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
 
         .toolbar {
-            height: 48px;
-            background: #0d0d0c;
-            border-bottom: 1px solid #1a1a18;
+            height: 56px;
+            background: #0a0000;
+            border-bottom: 1px solid var(--primary-glow);
             display: flex;
             align-items: center;
-            padding: 0 1rem;
-            gap: 1rem;
+            padding: 0 1.5rem;
+            gap: 1.5rem;
         }
 
         .address-input {
             flex: 1;
-            background: #151514;
-            border-radius: 10px;
-            height: 32px;
+            background: #111;
+            border-radius: 14px;
+            height: 38px;
             display: flex;
             align-items: center;
-            padding: 0 1rem;
-            font-size: 0.8rem;
-            color: #555;
+            padding: 0 1.2rem;
+            font-size: 0.9rem;
+            color: var(--primary);
+            border: 1px solid var(--primary-glow);
         }
 
         .address-input input {
@@ -90,7 +107,7 @@
             border: none;
             outline: none;
             width: 100%;
-            color: #ff3c00;
+            color: inherit;
             font-weight: 600;
         }
 
@@ -102,72 +119,132 @@
 
         #status-msg {
             position: absolute;
-            bottom: 20px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 10px;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: #ff3c00;
-            opacity: 0.5;
+            letter-spacing: 0.4em;
+            color: var(--primary);
+            opacity: 0.4;
+        }
+
+        .btn-cloak {
+            background: var(--primary);
+            color: #000;
+            padding: 0.5rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            transition: all 0.2s;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .btn-cloak:hover {
+            transform: scale(1.05);
+            background: #fff;
         }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <div class="flex items-center gap-3 mb-6 px-2">
-            <a href="index.html" class="w-8 h-8 rounded-lg bg-red-600/10 border border-red-500/20 flex items-center justify-center text-red-500">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <div class="flex items-center gap-3 mb-10 px-2">
+            <a href="index.html" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-current hover:scale-110 transition-transform" style="color: var(--primary)">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             </a>
-            <span class="text-[10px] font-black uppercase tracking-widest text-red-900">Phoenix Stealth</span>
+            <span class="text-[12px] font-black uppercase tracking-[0.2em]" style="color: var(--primary)">Stealth</span>
         </div>
 
         <div class="tab-item active">
-            <div class="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_8px_rgba(255,0,0,0.5)]"></div>
-            <span>Stealth Node 1</span>
+            <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background: var(--primary); box-shadow: 0 0 10px var(--primary-glow)"></div>
+            <span>Node Alpha</span>
         </div>
         <div class="tab-item" onclick="location.href='browser.html'">
-            <div class="w-2 h-2 rounded-full bg-gray-800"></div>
-            <span>Open Browser</span>
+            <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+            <span>Nexus Browser</span>
         </div>
     </div>
 
     <div class="main-view">
         <div class="toolbar">
-            <div class="flex gap-4">
-                <svg onclick="history.back()" class="w-4 h-4 text-gray-700 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                <svg onclick="history.forward()" class="w-4 h-4 text-gray-700 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <div class="flex gap-6 opacity-30">
+                <svg onclick="history.back()" class="w-5 h-5 hover:text-white cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                <svg onclick="history.forward()" class="w-5 h-5 hover:text-white cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 5l7 7-7 7"/></svg>
             </div>
             <div class="address-input">
-                <input type="text" placeholder="enter url to cloak..." id="proxy-input">
+                <input type="text" placeholder="Ignite a URL to cloak..." id="proxy-input" spellcheck="false" autocomplete="off">
             </div>
-            <button onclick="cloak()" class="text-xs font-black uppercase text-red-600 px-4 hover:text-red-400">Cloak</button>
+            <button onclick="cloak()" class="btn-cloak">Cloak</button>
         </div>
         <iframe src="about:blank" id="uv-viewport"></iframe>
-        <div id="status-msg">Phoenix Stealth Mode: Initializing...</div>
+        <div id="status-msg">PHOENIX STEALTH INITIALIZING...</div>
     </div>
 
     <script>
+        const fallbackThemes = {
+            "themes": [
+                { "id": "ember", "name": "Ember", "primary": "#ff3c00", "glow": "rgba(255, 60, 0, 0.6)", "bg": "#0a0000", "secondary": "#ff8c00" },
+                { "id": "ocean", "name": "Ocean", "primary": "#00d4ff", "glow": "rgba(0, 212, 255, 0.6)", "bg": "#000814", "secondary": "#0077b6" },
+                { "id": "dunes", "name": "Dunes", "primary": "#ffb703", "glow": "rgba(255, 183, 3, 0.6)", "bg": "#141000", "secondary": "#fb8500" },
+                { "id": "lavender", "name": "Lavender", "primary": "#9d4edd", "glow": "rgba(157, 78, 221, 0.6)", "bg": "#10002b", "secondary": "#5a189a" },
+                { "id": "forest", "name": "Forest", "primary": "#2dc653", "glow": "rgba(45, 198, 83, 0.6)", "bg": "#001a00", "secondary": "#1b4332" },
+                { "id": "nebula", "name": "Nebula", "primary": "#ff00ff", "glow": "rgba(255, 0, 255, 0.6)", "bg": "#0d001a", "secondary": "#7000ff" },
+                { "id": "aurora", "name": "Aurora", "primary": "#00ffcc", "glow": "rgba(0, 255, 204, 0.6)", "bg": "#000d0a", "secondary": "#7000ff" }
+            ]
+        };
+
+        function setCSSVars(theme) {
+            document.documentElement.style.setProperty('--primary', theme.primary);
+            document.documentElement.style.setProperty('--primary-glow', theme.glow);
+            document.documentElement.style.setProperty('--bg-core', theme.bg);
+            document.documentElement.style.setProperty('--secondary', theme.secondary || theme.primary);
+        }
+
+        async function applyTheme() {
+            const activeThemeId = localStorage.getItem('phoenix-theme') || 'ember';
+            try {
+                const r = await fetch('assets/themes/theme.json');
+                if (!r.ok) throw new Error();
+                const data = await r.json();
+                const theme = data.themes.find(t => t.id === activeThemeId) || data.themes[0];
+                setCSSVars(theme);
+            } catch (e) {
+                const theme = fallbackThemes.themes.find(t => t.id === activeThemeId) || fallbackThemes.themes[0];
+                setCSSVars(theme);
+            }
+        }
+        applyTheme();
+
         const input = document.getElementById('proxy-input');
         const iframe = document.getElementById('uv-viewport');
         const status = document.getElementById('status-msg');
 
         function cloak() {
-            const url = input.value.trim();
+            let url = input.value.trim();
             if (!url) return;
+
+            if (!url.startsWith('http')) {
+                if (url.includes('.') && !url.includes(' ')) {
+                    url = 'https://' + url;
+                } else {
+                    url = `https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
+                }
+            }
 
             const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
             
             if (settings.engine === 'uv' && window.uvLoaded) {
-                status.innerText = "UV Engine: Active";
-                iframe.src = __uv$config.prefix + __uv$config.encodeUrl(url.startsWith('http') ? url : 'https://' + url);
+                status.innerText = "ULTRAVIOLET CLOAK ACTIVE";
+                iframe.src = __uv$config.prefix + __uv$config.encodeUrl(url);
             } else if (settings.engine === 'sj' && window.sjLoaded) {
-                status.innerText = "Scramjet Engine: Active";
-                iframe.src = '/sj/' + btoa(url.startsWith('http') ? url : 'https://' + url);
+                status.innerText = "SCRAMJET CLOAK ACTIVE";
+                iframe.src = '/sj/' + btoa(url);
             } else {
-                status.innerText = "Core scripts missing. Direct mode only.";
-                iframe.src = url.startsWith('http') ? url : 'https://' + url;
+                status.innerText = "CORE SCRIPTS MISSING: DIRECT MODE";
+                iframe.src = url;
             }
         }
 
@@ -179,7 +256,7 @@
             const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
             const loaded = settings.engine === 'uv' ? window.uvLoaded : window.sjLoaded;
             if (loaded === false) {
-                status.innerText = "Waiting for local " + (settings.engine === 'uv' ? 'Ultraviolet' : 'Scramjet') + " scripts...";
+                status.innerText = "WAITING FOR " + (settings.engine === 'uv' ? 'UV' : 'SJ') + " CORE SCRIPTS...";
             }
         }, 2000);
     </script>
