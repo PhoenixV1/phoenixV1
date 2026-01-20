@@ -6,8 +6,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #ff3c00;
+            --primary-glow: rgba(255, 60, 0, 0.6);
+            --bg-core: #0a0000;
+            --secondary: #ff8c00;
+        }
+
         body { 
-            background: #0a0000; 
+            background: var(--bg-core); 
             color: #fff; 
             font-family: 'Outfit', sans-serif; 
             display: flex; 
@@ -15,23 +22,78 @@
             justify-content: center; 
             min-height: 100vh;
             padding: 2rem;
+            transition: background 0.5s ease;
+            position: relative;
         }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--primary) 0%, transparent 80%);
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+
         .settings-card {
             background: rgba(10, 0, 0, 0.9);
-            border: 1px solid #ff3c0033;
-            border-radius: 32px;
-            box-shadow: 0 0 50px rgba(255, 60, 0, 0.1);
-        }
-        .engine-btn {
-            background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s;
+            border-radius: 32px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(20px);
+            width: 100%;
+            max-width: 800px;
         }
+
+        .theme-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .theme-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .theme-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .engine-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         .engine-btn.active {
-            background: #ff3c00;
+            background: var(--primary);
             color: #000;
-            border-color: #ff3c00;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
         }
+
+        .theme-pill {
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255,255,255,0.02);
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-pill:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.05);
+            border-color: var(--primary);
+        }
+        .theme-pill.active {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
         .toggle-track {
             width: 48px;
             height: 24px;
@@ -43,7 +105,7 @@
         .toggle-thumb {
             width: 18px;
             height: 18px;
-            background: #000;
+            background: #fff;
             border-radius: 50%;
             position: absolute;
             top: 3px;
@@ -52,122 +114,216 @@
         }
         .toggle-active .toggle-thumb {
             transform: translateX(24px);
+            background: #000;
+        }
+
+        select option {
+            background: #000;
         }
     </style>
 </head>
 <body>
-    <div class="max-w-xl w-full settings-card p-10">
+    <div class="settings-card p-10">
         <header class="flex justify-between items-center mb-10">
-            <h1 class="text-3xl font-black uppercase tracking-widest text-red-600">Core Config</h1>
-            <a href="index.html" class="text-[11px] font-black uppercase text-red-900 hover:text-red-500 transition-colors">Close</a>
+            <div>
+                <h1 class="text-3xl font-black uppercase tracking-widest" style="color: var(--primary)">Core Config</h1>
+                <p class="text-[9px] font-black uppercase tracking-[0.5em] opacity-30 mt-1">Phoenix Optimization Protocol</p>
+            </div>
+            <a href="index.html" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-600 hover:text-black transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </a>
         </header>
         
-        <div class="space-y-8">
+        <div class="space-y-12">
             <section>
-                <h3 class="text-[10px] uppercase tracking-[0.4em] text-red-900 font-black mb-4">Proxy Engine</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <button id="engine-uv" onclick="setEngine('uv')" class="engine-btn active font-black py-3 rounded-xl text-xs uppercase">Ultraviolet</button>
-                    <button id="engine-sj" onclick="setEngine('sj')" class="engine-btn font-black py-3 rounded-xl text-xs uppercase">Scramjet</button>
+                <div class="flex justify-between items-end mb-6">
+                    <h3 class="text-[10px] uppercase tracking-[0.4em] opacity-40 font-black">Mythical Environment</h3>
+                    <span id="active-theme-name" class="text-[9px] font-black uppercase text-red-600 tracking-widest">Ember</span>
                 </div>
-            </section>
-
-            <section>
-                <h3 class="text-[10px] uppercase tracking-[0.4em] text-red-900 font-black mb-4">Transport Protocol</h3>
-                <select id="transport-select" onchange="saveSettings()" class="w-full bg-black border border-white/5 p-4 rounded-xl text-sm font-bold text-white/80 outline-none focus:border-red-600 transition-colors">
-                    <option value="wisp">Wisp (Default)</option>
-                    <option value="libcurl">Libcurl</option>
-                    <option value="ephemeral">Ephemeral</option>
-                </select>
-                <p class="text-[9px] text-gray-700 mt-2 uppercase tracking-widest">Select Wisp for best performance on school networks.</p>
-            </section>
-
-            <section class="space-y-4">
-                <div class="flex justify-between items-center p-4 bg-white/[0.02] rounded-2xl border border-white/5">
-                    <span class="text-sm font-bold opacity-60">Automatic Cloaking</span>
-                    <div id="cloak-toggle" onclick="toggleCloak()" class="toggle-track bg-red-600 toggle-active">
-                        <div class="toggle-thumb"></div>
+                <div class="theme-container">
+                    <div id="theme-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                        <!-- Themes injected via JS -->
                     </div>
                 </div>
-                <div class="flex justify-between items-center p-4 bg-white/[0.02] rounded-2xl border border-white/5">
-                    <span class="text-sm font-bold opacity-60">Tab Disguise</span>
-                    <select id="disguise-select" onchange="saveSettings()" class="bg-transparent text-xs text-red-600 font-black uppercase outline-none text-right">
-                        <option value="none" class="bg-black">None</option>
-                        <option value="gdrive" class="bg-black">Google Drive</option>
-                        <option value="classroom" class="bg-black">Classroom</option>
-                        <option value="canvas" class="bg-black">Canvas</option>
-                    </select>
-                </div>
             </section>
+
+            <div class="grid md:grid-cols-2 gap-10">
+                <section>
+                    <h3 class="text-[10px] uppercase tracking-[0.4em] opacity-40 font-black mb-4">Proxy Engine</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button id="engine-uv" onclick="setEngine('uv')" class="engine-btn font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest">Ultraviolet</button>
+                        <button id="engine-sj" onclick="setEngine('sj')" class="engine-btn font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest">Scramjet</button>
+                    </div>
+                </section>
+
+                <section class="space-y-4">
+                    <h3 class="text-[10px] uppercase tracking-[0.4em] opacity-40 font-black mb-4">Stealth Protocols</h3>
+                    <div class="flex justify-between items-center p-4 bg-white/[0.02] rounded-2xl border border-white/5">
+                        <span class="text-xs font-black uppercase tracking-widest opacity-60">Automatic Cloaking</span>
+                        <div id="cloak-toggle" onclick="toggleCloak()" class="toggle-track bg-gray-800">
+                            <div class="toggle-thumb"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center p-4 bg-white/[0.02] rounded-2xl border border-white/5">
+                        <span class="text-xs font-black uppercase tracking-widest opacity-60">Tab Disguise</span>
+                        <select id="disguise-select" onchange="saveSettings()" class="bg-transparent text-[10px] font-black uppercase outline-none text-right cursor-pointer" style="color: var(--primary)">
+                            <option value="none">None</option>
+                            <option value="gdrive">Google Drive</option>
+                            <option value="classroom">Classroom</option>
+                            <option value="canvas">Canvas</option>
+                        </select>
+                    </div>
+                </section>
+            </div>
         </div>
 
-        <div class="mt-12 text-center opacity-20 hover:opacity-100 transition-opacity">
-            <p class="text-[10px] font-black uppercase tracking-widest text-red-600">Phoenix V1 CORE [v1.0.4-fire]</p>
+        <div class="mt-16 text-center opacity-10">
+            <p class="text-[10px] font-black uppercase tracking-[1em]">Phoenix V1 CORE [v1.0.40-full-fallback]</p>
         </div>
     </div>
 
     <script>
-        function loadSettings() {
-            const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || {
-                engine: 'uv',
-                transport: 'wisp',
-                cloak: true,
-                disguise: 'none'
-            };
+        let themesData = [];
 
-            setEngine(settings.engine, false);
-            document.getElementById('transport-select').value = settings.transport;
-            document.getElementById('disguise-select').value = settings.disguise;
+        const defaultThemes = [
+            { "id": "ember", "name": "Ember", "primary": "#ff3c00", "glow": "rgba(255, 60, 0, 0.6)", "bg": "#0a0000", "secondary": "#ff8c00" },
+            { "id": "ocean", "name": "Ocean", "primary": "#00d4ff", "glow": "rgba(0, 212, 255, 0.6)", "bg": "#000814", "secondary": "#0077b6" },
+            { "id": "dunes", "name": "Dunes", "primary": "#ffb703", "glow": "rgba(255, 183, 3, 0.6)", "bg": "#141000", "secondary": "#fb8500" },
+            { "id": "lavender", "name": "Lavender", "primary": "#9d4edd", "glow": "rgba(157, 78, 221, 0.6)", "bg": "#10002b", "secondary": "#5a189a" },
+            { "id": "forest", "name": "Forest", "primary": "#2dc653", "glow": "rgba(45, 198, 83, 0.6)", "bg": "#001a00", "secondary": "#1b4332" },
+            { "id": "christmas", "name": "Christmas", "primary": "#d90429", "glow": "rgba(217, 4, 41, 0.6)", "bg": "#01160c", "secondary": "#2b9348" },
+            { "id": "halloween", "name": "Halloween", "primary": "#ff6d00", "glow": "rgba(255, 109, 0, 0.6)", "bg": "#0f001a", "secondary": "#7b2cbf" },
+            { "id": "thanksgiving", "name": "Thanksgiving", "primary": "#bc4749", "glow": "rgba(188, 71, 73, 0.6)", "bg": "#1a0f00", "secondary": "#a7c957" },
+            { "id": "cyber", "name": "Cyber", "primary": "#f72585", "glow": "rgba(247, 37, 133, 0.6)", "bg": "#03045e", "secondary": "#4cc9f0" },
+            { "id": "midnight", "name": "Midnight", "primary": "#48cae4", "glow": "rgba(72, 202, 228, 0.6)", "bg": "#000000", "secondary": "#023e8a" },
+            { "id": "nebula", "name": "Nebula", "primary": "#ff00ff", "glow": "rgba(255, 0, 255, 0.6)", "bg": "#0d001a", "secondary": "#7000ff" },
+            { "id": "glacier", "name": "Glacier", "primary": "#f0f8ff", "glow": "rgba(240, 248, 255, 0.6)", "bg": "#001219", "secondary": "#005f73" },
+            { "id": "magma", "name": "Magma", "primary": "#ff4d00", "glow": "rgba(255, 77, 0, 0.6)", "bg": "#0a0500", "secondary": "#900c3f" },
+            { "id": "solar", "name": "Solar", "primary": "#ffd700", "glow": "rgba(255, 215, 0, 0.6)", "bg": "#1a0a00", "secondary": "#ff8c00" },
+            { "id": "toxic", "name": "Toxic", "primary": "#39ff14", "glow": "rgba(57, 255, 20, 0.6)", "bg": "#050a00", "secondary": "#76ff03" },
+            { "id": "abyss", "name": "Abyss", "primary": "#00ffff", "glow": "rgba(0, 255, 255, 0.4)", "bg": "#000005", "secondary": "#000080" },
+            { "id": "sakura", "name": "Sakura", "primary": "#ffb7c5", "glow": "rgba(255, 183, 197, 0.6)", "bg": "#1a0a0d", "secondary": "#ff69b4" },
+            { "id": "royal", "name": "Royal", "primary": "#d4af37", "glow": "rgba(212, 175, 55, 0.6)", "bg": "#0a001a", "secondary": "#800080" },
+            { "id": "storm", "name": "Storm", "primary": "#a8dadc", "glow": "rgba(168, 218, 220, 0.6)", "bg": "#1d3557", "secondary": "#457b9d" },
+            { "id": "void", "name": "Void", "primary": "#ffffff", "glow": "rgba(255, 255, 255, 0.4)", "bg": "#000000", "secondary": "#333333" },
+            { "id": "aurora", "name": "Aurora", "primary": "#00ffcc", "glow": "rgba(0, 255, 204, 0.6)", "bg": "#000d0a", "secondary": "#7000ff" },
+            { "id": "sunset", "name": "Sunset", "primary": "#ff4e00", "glow": "rgba(255, 78, 0, 0.6)", "bg": "#1a001a", "secondary": "#8800ff" },
+            { "id": "monochrome", "name": "Monochrome", "primary": "#ffffff", "glow": "rgba(255, 255, 255, 0.3)", "bg": "#000000", "secondary": "#333333" },
+            { "id": "peach", "name": "Peach", "primary": "#ff9a8b", "glow": "rgba(255, 154, 139, 0.6)", "bg": "#1a0a05", "secondary": "#ff6a88" },
+            { "id": "emerald", "name": "Emerald", "primary": "#50fa7b", "glow": "rgba(80, 250, 123, 0.6)", "bg": "#0a1a0d", "secondary": "#282a36" },
+            { "id": "ruby", "name": "Ruby", "primary": "#ff5555", "glow": "rgba(255, 85, 85, 0.6)", "bg": "#1a0505", "secondary": "#44475a" },
+            { "id": "sapphire", "name": "Sapphire", "primary": "#8be9fd", "glow": "rgba(139, 233, 253, 0.6)", "bg": "#0a0d1a", "secondary": "#6272a4" },
+            { "id": "quartz", "name": "Quartz", "primary": "#ff79c6", "glow": "rgba(255, 121, 198, 0.6)", "bg": "#1a0a15", "secondary": "#bd93f9" },
+            { "id": "onyx", "name": "Onyx", "primary": "#44475a", "glow": "rgba(68, 71, 90, 0.6)", "bg": "#000000", "secondary": "#282a36" },
+            { "id": "titan", "name": "Titan", "primary": "#f8f8f2", "glow": "rgba(248, 248, 242, 0.6)", "bg": "#1a1a1a", "secondary": "#6272a4" },
+            { "id": "moss", "name": "Moss", "primary": "#8fb339", "glow": "rgba(143, 179, 57, 0.6)", "bg": "#0d1a00", "secondary": "#4b5320" },
+            { "id": "sky", "name": "Sky", "primary": "#caf0f8", "glow": "rgba(202, 240, 248, 0.6)", "bg": "#001d3d", "secondary": "#48cae4" },
+            { "id": "desert", "name": "Desert", "primary": "#e9c46a", "glow": "rgba(233, 196, 106, 0.6)", "bg": "#264653", "secondary": "#f4a261" },
+            { "id": "tundra", "name": "Tundra", "primary": "#fefcfb", "glow": "rgba(254, 252, 251, 0.5)", "bg": "#1282a2", "secondary": "#001f54" },
+            { "id": "autumn", "name": "Autumn", "primary": "#e76f51", "glow": "rgba(231, 111, 81, 0.6)", "bg": "#2a1b18", "secondary": "#f4a261" },
+            { "id": "jungle", "name": "Jungle", "primary": "#007f5f", "glow": "rgba(0, 127, 95, 0.6)", "bg": "#101a0a", "secondary": "#55a630" },
+            { "id": "cave", "name": "Cave", "primary": "#9a8c98", "glow": "rgba(154, 140, 152, 0.5)", "bg": "#22223b", "secondary": "#4a4e69" },
+            { "id": "reef", "name": "Reef", "primary": "#ff9f1c", "glow": "rgba(255, 159, 28, 0.6)", "bg": "#2ec4b6", "secondary": "#fdfffc" },
+            { "id": "meadow", "name": "Meadow", "primary": "#ccd5ae", "glow": "rgba(204, 213, 174, 0.6)", "bg": "#1a1a1a", "secondary": "#e9edc9" },
+            { "id": "peak", "name": "Peak", "primary": "#edf2f4", "glow": "rgba(237, 242, 244, 0.5)", "bg": "#2b2d42", "secondary": "#8d99ae" }
+        ];
+
+        function setCSSVars(theme) {
+            document.documentElement.style.setProperty('--primary', theme.primary);
+            document.documentElement.style.setProperty('--primary-glow', theme.glow);
+            document.documentElement.style.setProperty('--bg-core', theme.bg);
+            document.documentElement.style.setProperty('--secondary', theme.secondary || theme.primary);
             
-            const cloakToggle = document.getElementById('cloak-toggle');
-            if (settings.cloak) {
-                cloakToggle.classList.add('toggle-active', 'bg-red-600');
-                cloakToggle.classList.remove('bg-gray-800');
-            } else {
-                cloakToggle.classList.remove('toggle-active', 'bg-red-600');
-                cloakToggle.classList.add('bg-gray-800');
-            }
+            const activeName = document.getElementById('active-theme-name');
+            if (activeName) activeName.innerText = theme.name;
         }
 
-        function setEngine(engine, save = true) {
-            document.getElementById('engine-uv').classList.remove('active');
-            document.getElementById('engine-sj').classList.remove('active');
-            document.getElementById(`engine-${engine}`).classList.add('active');
-            if (save) saveSettings();
+        function applyThemeStyles(themeId) {
+            const theme = themesData.find(t => t.id === themeId);
+            if (!theme) return;
+            setCSSVars(theme);
+            
+            document.querySelectorAll('.theme-pill').forEach(p => {
+                p.classList.toggle('active', p.dataset.id === themeId);
+            });
         }
 
-        function toggleCloak() {
-            const toggle = document.getElementById('cloak-toggle');
-            toggle.classList.toggle('toggle-active');
-            if (toggle.classList.contains('toggle-active')) {
-                toggle.classList.replace('bg-gray-800', 'bg-red-600');
-            } else {
-                toggle.classList.replace('bg-red-600', 'bg-gray-800');
+        async function initThemes() {
+            try {
+                const r = await fetch('assets/themes/theme.json');
+                if (!r.ok) throw new Error();
+                const data = await r.json();
+                themesData = data.themes;
+            } catch (e) {
+                themesData = defaultThemes;
             }
-            saveSettings();
+
+            const activeThemeId = localStorage.getItem('phoenix-theme') || 'ember';
+            const grid = document.getElementById('theme-grid');
+            grid.innerHTML = '';
+            
+            themesData.forEach(t => {
+                const pill = document.createElement('div');
+                pill.className = `theme-pill p-4 rounded-2xl flex flex-col items-center gap-2 ${t.id === activeThemeId ? 'active' : ''}`;
+                pill.dataset.id = t.id;
+                pill.innerHTML = `
+                    <div class="w-7 h-7 rounded-full border border-white/10" style="background: ${t.primary}; box-shadow: 0 0 15px ${t.glow}"></div>
+                    <span class="text-[8px] font-black uppercase tracking-tight opacity-70">${t.name}</span>
+                `;
+                pill.onclick = () => {
+                    localStorage.setItem('phoenix-theme', t.id);
+                    applyThemeStyles(t.id);
+                };
+                grid.appendChild(pill);
+            });
+
+            applyThemeStyles(activeThemeId);
         }
 
         function saveSettings() {
             const settings = {
                 engine: document.getElementById('engine-uv').classList.contains('active') ? 'uv' : 'sj',
-                transport: document.getElementById('transport-select').value,
                 cloak: document.getElementById('cloak-toggle').classList.contains('toggle-active'),
                 disguise: document.getElementById('disguise-select').value
             };
             localStorage.setItem('phoenix-settings', JSON.stringify(settings));
-            applyDisguise(settings.disguise);
         }
 
-        function applyDisguise(type) {
-            const titles = {
-                none: 'Phoenix V1 | Console',
-                gdrive: 'My Drive - Google Drive',
-                classroom: 'Classes',
-                canvas: 'Dashboard'
+        function toggleCloak() {
+            const toggle = document.getElementById('cloak-toggle');
+            toggle.classList.toggle('toggle-active');
+            toggle.style.background = toggle.classList.contains('toggle-active') ? 'var(--primary)' : '#1f2937';
+            saveSettings();
+        }
+
+        function setEngine(engine) {
+            document.getElementById('engine-uv').classList.toggle('active', engine === 'uv');
+            document.getElementById('engine-sj').classList.toggle('active', engine === 'sj');
+            saveSettings();
+        }
+
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || {
+                engine: 'uv',
+                cloak: true,
+                disguise: 'none'
             };
-            if (window.parent) window.parent.document.title = titles[type] || titles.none;
+
+            setEngine(settings.engine);
+            document.getElementById('disguise-select').value = settings.disguise;
+            
+            const cloakToggle = document.getElementById('cloak-toggle');
+            if (settings.cloak) {
+                cloakToggle.classList.add('toggle-active');
+                cloakToggle.style.background = 'var(--primary)';
+            } else {
+                cloakToggle.classList.remove('toggle-active');
+                cloakToggle.style.background = '#1f2937';
+            }
         }
 
-        window.onload = loadSettings;
+        loadSettings();
+        initThemes();
     </script>
 </body>
 </html>
