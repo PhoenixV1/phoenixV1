@@ -62,7 +62,7 @@
         }
 
         @keyframes phoenixPulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 40px var(--primary-glow)); }
+            0%, 100__% { transform: scale(1); filter: drop-shadow(0 0 40px var(--primary-glow)); }
             50% { transform: scale(1.03); filter: drop-shadow(0 0 80px var(--primary-glow)); }
         }
 
@@ -74,6 +74,20 @@
             color: var(--primary);
             opacity: 0.9;
             margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .brand p:hover {
+            opacity: 1;
+            letter-spacing: 1em;
+            transform: scale(1.05);
+            text-shadow: 0 0 15px var(--primary);
+        }
+
+        .brand p:active {
+            transform: scale(0.95);
         }
 
         .search-area {
@@ -170,7 +184,7 @@
 
     <div class="brand">
         <h1>phoenix</h1>
-        <p>"FIRST ZERO CORE"</p>
+        <p id="tagline">"FIRST ZERO CORE"</p>
     </div>
 
     <div class="search-area">
@@ -218,6 +232,16 @@
     </div>
 
     <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then((registration) => {
+                    console.log('Phoenix SW registered with scope:', registration.scope);
+                }, (err) => {
+                    console.log('Phoenix SW registration failed:', err);
+                });
+            });
+        }
+
         const fallbackThemes = {
             "themes": [
                 { "id": "ember", "name": "Ember", "primary": "#ff3c00", "glow": "rgba(255, 60, 0, 0.6)", "bg": "#0a0000", "secondary": "#ff8c00" },
@@ -288,6 +312,40 @@
         const navbar = document.getElementById('navbar-hud');
         const phoenixSound = document.getElementById('phoenixSound');
         const mainSearch = document.getElementById('mainSearch');
+        const tagline = document.getElementById('tagline');
+
+        // JSON-style tagline data
+        const taglineConfig = {
+            "messages": [
+                "\"FIRST ZERO CORE\"",
+                "\"IGNITE THE VOID\"",
+                "\"PHOENIX PROTOCOL\"",
+                "\"BEYOND THE ASHES\"",
+                "\"ETERNAL ENGINE\"",
+                "\"CORE IGNITION\"",
+                "\"STEALTH OVERRIDE\""
+            ],
+            "currentIndex": 0
+        };
+
+        tagline.addEventListener('click', () => {
+            taglineConfig.currentIndex = (taglineConfig.currentIndex + 1) % taglineConfig.messages.length;
+            
+            // Visual transition
+            tagline.style.opacity = '0';
+            tagline.style.transform = 'scale(0.9) translateY(5px)';
+            
+            setTimeout(() => {
+                tagline.innerText = taglineConfig.messages[taglineConfig.currentIndex];
+                tagline.style.opacity = '1';
+                tagline.style.transform = 'scale(1) translateY(0)';
+                
+                // Play subtle sound if intended
+                phoenixSound.currentTime = 0;
+                phoenixSound.volume = 0.1;
+                phoenixSound.play().catch(() => {});
+            }, 150);
+        });
 
         mainSearch.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -321,6 +379,7 @@
             } else {
                 navbar.classList.add('visible');
                 phoenixSound.currentTime = 0;
+                phoenixSound.volume = 0.5;
                 phoenixSound.play().catch(() => {});
 
                 links.forEach((l, i) => {
