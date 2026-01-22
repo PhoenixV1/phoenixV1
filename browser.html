@@ -94,28 +94,6 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
 
-        .sidebar-toggle {
-            position: absolute;
-            top: 24px;
-            left: -12px;
-            z-index: 1100;
-            background: var(--primary);
-            color: #000;
-            width: 24px;
-            height: 48px;
-            border-radius: 0 12px 12px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 0 20px var(--primary-glow);
-        }
-        
-        .sidebar.collapsed + .main-view .sidebar-toggle {
-            left: 0;
-        }
-
         .toolbar {
             height: 60px;
             background: #0a0000;
@@ -159,22 +137,18 @@
             border: none;
         }
 
-        .tab-close {
-            opacity: 0;
-            transition: all 0.2s;
+        .btn-action {
             color: #555;
-            padding: 2px;
-            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .tab-item:hover .tab-close {
-            opacity: 0.6;
-        }
-
-        .tab-close:hover {
-            opacity: 1 !important;
-            background: rgba(255,255,255,0.1);
-            color: #fff !important;
+        .btn-action:hover {
+            color: var(--primary);
+            filter: drop-shadow(0 0 5px var(--primary-glow));
         }
 
         .new-tab-btn {
@@ -201,25 +175,6 @@
             box-shadow: 0 6px 20px var(--primary-glow);
         }
 
-        #dependency-warning {
-            display: none;
-            position: absolute;
-            top: 75px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #7f1d1d;
-            color: #fca5a5;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            z-index: 2000;
-            border: 1px solid #ef4444;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
-        }
-
         .custom-scrollbar::-webkit-scrollbar {
             width: 3px;
         }
@@ -230,8 +185,6 @@
     </style>
 </head>
 <body>
-    <div id="dependency-warning">Phoenix Node: Proxy Engines Offline</div>
-
     <div id="sidebar" class="sidebar">
         <div class="flex items-center gap-3 mb-10 px-2">
             <a href="index.html" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-current hover:scale-110 transition-transform" style="color: var(--primary)">
@@ -259,17 +212,22 @@
     </div>
 
     <div class="main-view">
-        <div onclick="toggleSidebar()" class="sidebar-toggle">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="4" d="M9 5l7 7-7 7"/></svg>
-        </div>
         <div class="toolbar">
-            <div class="flex gap-6 opacity-40">
-                <svg onclick="goBack()" class="w-5 h-5 hover:text-white cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
-                <svg onclick="goForward()" class="w-5 h-5 hover:text-white cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 5l7 7-7 7"/></svg>
-                <svg onclick="reload()" class="w-5 h-5 hover:text-white cursor-pointer transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <div class="flex gap-4 items-center">
+                <svg onclick="goBack()" class="btn-action w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                <svg onclick="goForward()" class="btn-action w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                <svg onclick="reload()" class="btn-action w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             </div>
             <div class="address-bar">
                 <input type="text" id="url-input" value="" spellcheck="false" placeholder="Ignite a search or URL...">
+            </div>
+            <div class="flex gap-4 items-center">
+                <div id="fs-toggle" onclick="toggleAppFullscreen()" class="btn-action">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="fs-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                </div>
+                <svg onclick="toggleSidebar()" class="btn-action w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M4 6h16M4 12h16M4 18h7"/></svg>
             </div>
         </div>
         <iframe id="browser-iframe" src="about:blank"></iframe>
@@ -297,26 +255,14 @@
         }
         applyTheme();
 
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'phoenix-theme') applyTheme();
-        });
-
         const iframe = document.getElementById('browser-iframe');
         const urlInput = document.getElementById('url-input');
         const tabList = document.getElementById('tab-list');
         const sidebar = document.getElementById('sidebar');
-        const warning = document.getElementById('dependency-warning');
 
         let tabs = [];
         let activeTabId = null;
         const defaultSearch = "https://duckduckgo.com/?q=";
-
-        function checkDependencies() {
-            const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
-            const isLoaded = settings.engine === 'uv' ? window.uvLoaded : window.sjLoaded;
-            warning.style.display = isLoaded === false ? 'block' : 'none';
-            return isLoaded;
-        }
 
         function renderTabs() {
             tabList.innerHTML = '';
@@ -329,7 +275,6 @@
                         <div class="w-2 h-2 rounded-full flex-shrink-0" style="background: ${tab.id === activeTabId ? 'var(--primary)' : 'rgba(255,255,255,0.1)'}; box-shadow: ${tab.id === activeTabId ? '0 0 10px var(--primary-glow)' : 'none'}"></div>
                         <span class="truncate max-w-[120px]">${tab.title}</span>
                     </div>
-                    ${tabs.length > 1 ? `<svg class="tab-close w-5 h-5" onclick="closeTab(event, ${tab.id})" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>` : ''}
                 `;
                 tabList.appendChild(tabEl);
             });
@@ -339,9 +284,9 @@
             activeTabId = id;
             const tab = tabs.find(t => t.id === id);
             
-            if (tab.url.startsWith('http') && !tab.url.includes(location.host)) {
-               const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv', transport: 'none' };
-               
+            const settings = JSON.parse(localStorage.getItem('phoenix-settings')) || { engine: 'uv' };
+            
+            if (tab.url.startsWith('http')) {
                if (settings.engine === 'uv' && window.uvLoaded) {
                    iframe.src = __uv$config.prefix + __uv$config.encodeUrl(tab.url);
                } else if (settings.engine === 'sj' && window.sjLoaded) {
@@ -363,22 +308,32 @@
             switchTab(id);
         }
 
-        function closeTab(e, id) {
-            e.stopPropagation();
-            if (tabs.length === 1) return;
-            const index = tabs.findIndex(t => t.id === id);
-            tabs = tabs.filter(t => t.id !== id);
-            if (activeTabId === id) {
-                const nextTab = tabs[index] || tabs[tabs.length - 1];
-                switchTab(nextTab.id);
-            } else {
-                renderTabs();
-            }
-        }
-
         function toggleSidebar() {
             sidebar.classList.toggle('collapsed');
         }
+
+        function toggleAppFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            const path = document.getElementById('fs-icon-path');
+            if (document.fullscreenElement) {
+                // Exit Fullscreen Icon
+                path.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+            } else {
+                // Enter Fullscreen Icon
+                path.setAttribute('d', 'M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4');
+            }
+        });
 
         urlInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -402,8 +357,6 @@
         function goBack() { try { iframe.contentWindow.history.back(); } catch(e) {} }
         function goForward() { try { iframe.contentWindow.history.forward(); } catch(e) {} }
         function reload() { switchTab(activeTabId); }
-
-        setInterval(checkDependencies, 2000);
 
         const params = new URLSearchParams(window.location.search);
         const query = params.get('q');
