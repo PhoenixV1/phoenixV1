@@ -222,11 +222,6 @@
                 <input type="text" id="url-input" value="" spellcheck="false" placeholder="Ignite a search or URL...">
             </div>
             <div class="flex gap-4 items-center">
-                <div id="fs-toggle" onclick="toggleAppFullscreen()" class="btn-action">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path id="fs-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                    </svg>
-                </div>
                 <svg onclick="toggleSidebar()" class="btn-action w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M4 6h16M4 12h16M4 18h7"/></svg>
             </div>
         </div>
@@ -311,29 +306,6 @@
         function toggleSidebar() {
             sidebar.classList.toggle('collapsed');
         }
-
-        function toggleAppFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-                });
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-            }
-        }
-
-        document.addEventListener('fullscreenchange', () => {
-            const path = document.getElementById('fs-icon-path');
-            if (document.fullscreenElement) {
-                // Exit Fullscreen Icon
-                path.setAttribute('d', 'M6 18L18 6M6 6l12 12');
-            } else {
-                // Enter Fullscreen Icon
-                path.setAttribute('d', 'M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4');
-            }
-        });
 
         urlInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
